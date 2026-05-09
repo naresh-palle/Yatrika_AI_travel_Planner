@@ -11,52 +11,57 @@ export async function GET(req: Request) {
     return NextResponse.json({ error: "Invalid coordinates" }, { status: 400 })
   }
 
-  const token = process.env.GOOGLE_MAPS_API_KEY || process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY
-  if (!token) {
-    return NextResponse.json({ error: "Google Maps API key is missing" }, { status: 500 })
-  }
-
   const { lng, lat } = parsed.data
 
-  // Use the Places API (New) endpoint
-  const endpoint = "https://places.googleapis.com/v1/places:searchNearby"
+  // Use Overpass API for nearby tourist attractions
+  const overpassQuery = `[out:json];
+  (
+    nwr["tourism"](around:5000,${lat},${lng});
+    nwr["historic"](around:5000,${lat},${lng});
+    nwr["leisure"="park"](around:5000,${lat},${lng});
+    nwr["leisure"="nature_reserve"](around:5000,${lat},${lng});
+  );
+  out center 15;`;
   
-  const res = await fetch(endpoint, {
-    method: "POST",
+  const endpoint = "https://overpass-api.de/api/interpreter"
+  
+  const urlParams = new URLSearchParams({ data: overpassQuery })
+  const res = await fetch(`${endpoint}?${urlParams.toString()}`, {
+    method: "GET",
     headers: {
-      "Content-Type": "application/json",
-      "X-Goog-Api-Key": token,
-      "X-Goog-FieldMask": "places.id,places.formattedAddress,places.shortFormattedAddress,places.displayName,places.location"
+      "Accept": "application/json",
+      "User-Agent": "Yatrika Travel Planner/1.0"
     },
-    body: JSON.stringify({
-      includedTypes: ["tourist_attraction"],
-      maxResultCount: 12,
-      locationRestriction: {
-        circle: {
-          center: {
-            latitude: Number(lat),
-            longitude: Number(lng)
-          },
-          radius: 5000.0 // 5km radius
-        }
-      }
-    }),
     cache: "no-store"
   })
 
-  const json = await res.json()
-
-  if (!res.ok) {
-    console.error("Google Places Nearby Error:", json)
-    return NextResponse.json({ error: json.error?.message || "Nearby attraction lookup failed" }, { status: 502 })
+  const text = await res.text()
+  let json
+  try {
+    json = JSON.parse(text)
+  } catch(e) {
+    console.error("Overpass API returned invalid JSON:", text)
+    return NextResponse.json({ error: "Nearby attraction lookup failed. OpenStreetMap API might be overloaded." }, { status: 502 })
   }
 
-  const features = (json.places || []).map((place: any) => ({
-    id: place.id,
-    place_name: place.shortFormattedAddress || place.formattedAddress,
-    text: place.displayName?.text || "Unknown",
-    center: [place.location?.longitude, place.location?.latitude],
-  }))
+  if (!res.ok) {
+    console.error("Overpass Nearby Error:", json)
+    return NextResponse.json({ error: "Nearby attraction lookup failed" }, { status: 502 })
+  }
+
+  const features = (json.elements || [])
+    .filter((el: any) => el.tags && el.tags.name) // Only include named places
+    .slice(0, 15)
+    .map((place: any) => {
+      const pLat = place.lat ?? place.center?.lat;
+      const pLon = place.lon ?? place.center?.lon;
+      return {
+        id: place.id.toString(),
+        place_name: place.tags.name,
+        text: place.tags.name,
+        center: [pLon, pLat],
+      }
+    })
 
   return NextResponse.json({ features })
 }

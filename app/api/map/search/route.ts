@@ -10,40 +10,29 @@ export async function GET(req: Request) {
     return NextResponse.json({ error: "Invalid query" }, { status: 400 })
   }
 
-  const token = process.env.GOOGLE_MAPS_API_KEY || process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY
-  if (!token) {
-    return NextResponse.json({ error: "Google Maps API key is missing" }, { status: 500 })
-  }
-
-  // Use the Places API (New) endpoint
-  const endpoint = "https://places.googleapis.com/v1/places:searchText"
+  // Use OpenStreetMap Nominatim API
+  const endpoint = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(parsed.data.q)}&limit=5`
   
   const res = await fetch(endpoint, {
-    method: "POST",
     headers: {
-      "Content-Type": "application/json",
-      "X-Goog-Api-Key": token,
-      "X-Goog-FieldMask": "places.id,places.formattedAddress,places.displayName,places.location"
+      "Accept-Language": "en-US,en;q=0.9",
+      "User-Agent": "Yatrika_Travel_Planner/1.0",
     },
-    body: JSON.stringify({
-      textQuery: parsed.data.q,
-      languageCode: "en"
-    }),
     cache: "no-store"
   })
 
   const json = await res.json()
 
   if (!res.ok) {
-    console.error("Google Places Search Error:", json)
-    return NextResponse.json({ error: json.error?.message || "Map search failed" }, { status: 502 })
+    console.error("Nominatim Search Error:", json)
+    return NextResponse.json({ error: "Map search failed" }, { status: 502 })
   }
 
-  const features = (json.places || []).map((place: any) => ({
-    id: place.id,
-    place_name: place.formattedAddress,
-    text: place.displayName?.text || "Unknown",
-    center: [place.location?.longitude, place.location?.latitude],
+  const features = json.map((place: any) => ({
+    id: place.place_id.toString(),
+    place_name: place.display_name,
+    text: place.name || place.display_name.split(',')[0],
+    center: [parseFloat(place.lon), parseFloat(place.lat)],
   }))
 
   return NextResponse.json({ features })

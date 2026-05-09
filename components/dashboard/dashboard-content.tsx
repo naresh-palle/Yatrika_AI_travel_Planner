@@ -16,25 +16,11 @@ import Link from "next/link"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-
-const overview = [
-  { label: "Active Trips", value: "4", icon: PlaneTakeoff, delta: "+2 this month" },
-  { label: "Upcoming Activities", value: "18", icon: CalendarDays, delta: "Next 7 days" },
-  { label: "Collaborators", value: "12", icon: Users, delta: "Across all trips" },
-  { label: "Planned Budget", value: "$8,240", icon: DollarSign, delta: "12% under target" },
-] as const
-
-const recentActivity = [
-  { title: "Updated Goa itinerary", time: "2h ago", meta: "Added 3 beach activities" },
-  { title: "Hotel booking confirmed", time: "5h ago", meta: "Jaipur - 2 nights" },
-  { title: "Riya joined Kerala trip", time: "Yesterday", meta: "Collaborator: Editor" },
-] as const
-
-const notifications = [
-  { title: "Flight price dropped", description: "Mumbai to Kochi is down by 9%", tag: "Deal" },
-  { title: "Weather alert", description: "Rain forecast for Udaipur on Day 3", tag: "Alert" },
-  { title: "Passport reminder", description: "Expiry check needed for 1 traveler", tag: "Reminder" },
-] as const
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/components/ui/dialog"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { useState } from "react"
 
 const savedDestinations = [
   { name: "Alleppey Backwaters", country: "India", score: "4.8", type: "Nature" },
@@ -43,7 +29,24 @@ const savedDestinations = [
   { name: "Valley of Flowers", country: "India", score: "4.8", type: "Adventure" },
 ] as const
 
-export function DashboardContent({ firstName }: { firstName?: string | null }) {
+export function DashboardContent({ firstName, trips = [] }: { firstName?: string | null; trips?: any[] }) {
+  const [budgetOpen, setBudgetOpen] = useState(false)
+  
+  const dynamicOverview = [
+    { label: "Total Trips", value: trips.length.toString(), icon: PlaneTakeoff, delta: "Lifetime" },
+    { label: "Upcoming Activities", value: "0", icon: CalendarDays, delta: "Coming soon" },
+    { label: "Collaborators", value: "0", icon: Users, delta: "Across all trips" },
+    { 
+      label: "Planned Budget", 
+      value: "$0", 
+      icon: DollarSign, 
+      delta: (
+        <button onClick={() => setBudgetOpen(true)} className="text-[#38BDF8] hover:underline font-medium focus:outline-none">
+          Manage Budgets &rarr;
+        </button>
+      )
+    },
+  ]
   return (
     <div className="space-y-6">
       <motion.section
@@ -66,21 +69,22 @@ export function DashboardContent({ firstName }: { firstName?: string | null }) {
       </motion.section>
 
       <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        {overview.map((item, idx) => (
+        {dynamicOverview.map((item, idx) => (
           <motion.div
             key={item.label}
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.25, delay: idx * 0.05 }}
+            className="h-full"
           >
-            <Card>
+            <Card className="h-full flex flex-col">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">{item.label}</CardTitle>
                 <item.icon className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
-              <CardContent>
+              <CardContent className="flex-1 flex flex-col justify-end">
                 <div className="text-2xl font-bold">{item.value}</div>
-                <p className="text-xs text-muted-foreground">{item.delta}</p>
+                <div className="text-xs text-muted-foreground mt-1">{item.delta}</div>
               </CardContent>
             </Card>
           </motion.div>
@@ -96,25 +100,28 @@ export function DashboardContent({ firstName }: { firstName?: string | null }) {
         >
           <Card className="h-full">
             <CardHeader>
-              <CardTitle>Recent Activity</CardTitle>
-              <CardDescription>Latest trip updates and team actions.</CardDescription>
+              <CardTitle>Your Trips</CardTitle>
+              <CardDescription>All your planned and active trips.</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              {recentActivity.map((entry) => (
-                <div
-                  key={entry.title}
-                  className="flex items-start justify-between rounded-lg border p-3"
-                >
-                  <div className="space-y-1">
-                    <p className="text-sm font-medium">{entry.title}</p>
-                    <p className="text-xs text-muted-foreground">{entry.meta}</p>
-                  </div>
-                  <div className="inline-flex items-center text-xs text-muted-foreground">
-                    <Clock3 className="mr-1 h-3.5 w-3.5" />
-                    {entry.time}
-                  </div>
-                </div>
-              ))}
+              {trips.length > 0 ? (
+                trips.map((trip) => (
+                  <Link href={`/trips/${trip.id}`} key={trip.id} className="block hover:bg-muted/50 transition-colors">
+                    <div className="flex items-start justify-between rounded-lg border p-3">
+                      <div className="space-y-1">
+                        <p className="text-sm font-medium">{trip.title}</p>
+                        <p className="text-xs text-muted-foreground">{trip.primaryDestination?.name || "Planned trip"}</p>
+                      </div>
+                      <div className="inline-flex items-center text-xs text-muted-foreground">
+                        <Clock3 className="mr-1 h-3.5 w-3.5" />
+                        {new Date(trip.updatedAt).toLocaleDateString()}
+                      </div>
+                    </div>
+                  </Link>
+                ))
+              ) : (
+                <div className="text-sm text-muted-foreground text-center py-6">You haven't planned any trips yet.</div>
+              )}
             </CardContent>
           </Card>
         </motion.div>
@@ -133,15 +140,7 @@ export function DashboardContent({ firstName }: { firstName?: string | null }) {
               <CardDescription>Actionable travel alerts.</CardDescription>
             </CardHeader>
             <CardContent className="space-y-3">
-              {notifications.map((n) => (
-                <div key={n.title} className="rounded-lg border p-3">
-                  <div className="mb-1 flex items-center justify-between gap-2">
-                    <p className="text-sm font-medium">{n.title}</p>
-                    <Badge variant="secondary">{n.tag}</Badge>
-                  </div>
-                  <p className="text-xs text-muted-foreground">{n.description}</p>
-                </div>
-              ))}
+              <div className="text-sm text-muted-foreground text-center py-6">No new notifications.</div>
             </CardContent>
           </Card>
         </motion.div>
@@ -177,6 +176,74 @@ export function DashboardContent({ firstName }: { firstName?: string | null }) {
           </CardContent>
         </Card>
       </motion.section>
+      <Dialog open={budgetOpen} onOpenChange={setBudgetOpen}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>Manage Trip Budget</DialogTitle>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            <div className="space-y-2">
+              <Label htmlFor="trip">Select Trip</Label>
+              <Select>
+                <SelectTrigger id="trip">
+                  <SelectValue placeholder="Choose a trip..." />
+                </SelectTrigger>
+                <SelectContent>
+                  {trips.length > 0 ? trips.map((t) => (
+                    <SelectItem key={t.id} value={t.id}>{t.title}</SelectItem>
+                  )) : (
+                    <SelectItem value="none" disabled>No trips available</SelectItem>
+                  )}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="currency">Currency</Label>
+                <Select defaultValue="USD">
+                  <SelectTrigger id="currency">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="USD">USD ($)</SelectItem>
+                    <SelectItem value="EUR">EUR (€)</SelectItem>
+                    <SelectItem value="GBP">GBP (£)</SelectItem>
+                    <SelectItem value="INR">INR (₹)</SelectItem>
+                    <SelectItem value="AUD">AUD (A$)</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="amount">Amount</Label>
+                <Input id="amount" type="number" placeholder="0.00" />
+              </div>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="category">Category</Label>
+              <Select defaultValue="MISC">
+                <SelectTrigger id="category">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="TRANSPORT">Transport</SelectItem>
+                  <SelectItem value="STAY">Accommodation</SelectItem>
+                  <SelectItem value="FOOD">Food & Dining</SelectItem>
+                  <SelectItem value="ACTIVITIES">Activities</SelectItem>
+                  <SelectItem value="SHOPPING">Shopping</SelectItem>
+                  <SelectItem value="MISC">Miscellaneous</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="details">Additional Details</Label>
+              <Input id="details" placeholder="e.g. Flight to Paris, Hotel deposit..." />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button onClick={() => setBudgetOpen(false)} className="w-full">Save Budget Details</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }

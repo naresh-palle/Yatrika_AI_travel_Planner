@@ -18,10 +18,6 @@ export async function GET(req: Request) {
     where: { id: tripId },
     include: {
       destinations: {
-        where: {
-          latitude: { not: null },
-          longitude: { not: null },
-        },
         orderBy: { createdAt: "asc" },
       },
     },
@@ -35,6 +31,7 @@ export async function GET(req: Request) {
   return NextResponse.json({
     data: {
       tripId: trip.id,
+      destinationName: trip.destinations.length > 0 ? trip.destinations[0].name : null,
       destinations: trip.destinations,
       route:
         coordinates.length >= 2

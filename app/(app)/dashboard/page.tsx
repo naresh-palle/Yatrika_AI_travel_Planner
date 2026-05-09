@@ -1,9 +1,16 @@
-import { currentUser } from "@clerk/nextjs/server"
+import { requireAppUser } from "@/lib/auth/app-user"
+import { listTripsAccessibleByUser } from "@/modules/trips/repository"
 import { DashboardContent } from "@/components/dashboard/dashboard-content"
+import { redirect } from "next/navigation"
 
 export default async function Page() {
-  const user = await currentUser()
+  const user = await requireAppUser()
+  if (!user) {
+    redirect("/sign-in")
+  }
 
-  return <DashboardContent firstName={user?.firstName} />
+  const trips = await listTripsAccessibleByUser(user.id)
+
+  return <DashboardContent firstName={user?.name?.split(" ")[0]} trips={trips} />
 }
 

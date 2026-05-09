@@ -1,0 +1,1 @@
+const q = encodeURIComponent('[out:json];(nwr[\"tourism\"](around:5000,51.5074,-0.1278);nwr[\"historic\"](around:5000,51.5074,-0.1278););out center 12;'); fetch('https://overpass-api.de/api/interpreter?data='+q, {headers:{'User-Agent': 'Yatrika Planner/1.0', 'Accept': 'application/json'}}).then(r=>r.text()).then(console.log)

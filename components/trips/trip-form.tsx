@@ -230,7 +230,9 @@ export function TripForm({ mode, tripId, defaultValues, isItinerary = false }: T
                 id="startDate" 
                 name="startDate" 
                 type="date" 
+                min={new Date().toISOString().split("T")[0]}
                 value={startDate} 
+                onClick={(e) => { if (e.currentTarget.showPicker) e.currentTarget.showPicker(); }}
                 onChange={(e) => handleDateChange("start", e.target.value)} 
               />
             </div>
@@ -241,7 +243,9 @@ export function TripForm({ mode, tripId, defaultValues, isItinerary = false }: T
                 id="endDate" 
                 name="endDate" 
                 type="date" 
+                min={startDate || new Date().toISOString().split("T")[0]}
                 value={endDate} 
+                onClick={(e) => { if (e.currentTarget.showPicker) e.currentTarget.showPicker(); }}
                 onChange={(e) => handleDateChange("end", e.target.value)} 
               />
             </div>

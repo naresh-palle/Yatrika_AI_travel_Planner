@@ -196,10 +196,12 @@ Include 4-6 activities per day. Make descriptions vivid and genuinely useful. In
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          title: `${days || 5}-Day Trip to ${itinerary.destination}`,
+          title: `${days || 5}-Day Trip to ${itinerary.destination}`.substring(0, 120),
           description: JSON.stringify(itinerary),
-          destinationName: itinerary.destination,
+          destinationName: itinerary.destination.substring(0, 160),
           travelersCount: 1,
+          startDate: startDate ? startDate : undefined,
+          endDate: endDate ? endDate : undefined,
         }),
       });
       if (response.ok) {
@@ -213,7 +215,7 @@ Include 4-6 activities per day. Make descriptions vivid and genuinely useful. In
       }
     } catch (err) {
       console.error(err);
-      alert("Could not save trip. Make sure you are logged in.");
+      alert(err instanceof Error ? err.message : "Could not save trip. Make sure you are logged in.");
     } finally {
       setIsSaving(false);
     }
@@ -302,8 +304,10 @@ Include 4-6 activities per day. Make descriptions vivid and genuinely useful. In
                     <label className="text-[11px] uppercase tracking-wider text-muted-foreground font-medium">Start Date</label>
                     <input
                       type="date"
+                      min={new Date().toISOString().split("T")[0]}
                       className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 text-muted-foreground"
                       value={startDate}
+                      onClick={(e) => { if (e.currentTarget.showPicker) e.currentTarget.showPicker(); }}
                       onChange={(e) => setStartDate(e.target.value)}
                     />
                   </div>
@@ -312,9 +316,10 @@ Include 4-6 activities per day. Make descriptions vivid and genuinely useful. In
                     <label className="text-[11px] uppercase tracking-wider text-muted-foreground font-medium">End Date</label>
                     <input
                       type="date"
-                      min={startDate}
+                      min={startDate || new Date().toISOString().split("T")[0]}
                       className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 text-muted-foreground"
                       value={endDate}
+                      onClick={(e) => { if (e.currentTarget.showPicker) e.currentTarget.showPicker(); }}
                       onChange={(e) => setEndDate(e.target.value)}
                     />
                   </div>
