@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Save, Download, Check } from "lucide-react";
+import { LocationAutocomplete } from "@/components/ui/location-autocomplete";
 
 type Activity = {
   time: string;
@@ -279,24 +280,20 @@ Include 4-6 activities per day. Make descriptions vivid and genuinely useful. In
                   {requireFlights && (
                     <div className="md:col-span-6 flex flex-col gap-1.5">
                       <label className="text-[11px] uppercase tracking-wider text-muted-foreground font-medium">Origin City</label>
-                      <input
-                        type="text"
-                        className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-                        placeholder="Where are you flying from?"
+                      <LocationAutocomplete
                         value={origin}
-                        onChange={(e) => setOrigin(e.target.value)}
+                        onChange={setOrigin}
+                        placeholder="Where are you flying from?"
                       />
                     </div>
                   )}
 
                   <div className={`flex flex-col gap-1.5 ${requireFlights ? 'md:col-span-6' : 'md:col-span-12'}`}>
                     <label className="text-[11px] uppercase tracking-wider text-muted-foreground font-medium">Destination</label>
-                    <input
-                      type="text"
-                      className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-                      placeholder="e.g. Goa, Tokyo, Rajasthan..."
+                    <LocationAutocomplete
                       value={destination}
-                      onChange={(e) => setDestination(e.target.value)}
+                      onChange={setDestination}
+                      placeholder="e.g. Goa, Tokyo, Rajasthan..."
                     />
                   </div>
 
