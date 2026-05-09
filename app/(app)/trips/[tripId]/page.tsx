@@ -31,6 +31,8 @@ const getTagClass = (type: string) => {
   return "bg-secondary text-secondary-foreground";
 };
 
+export const dynamic = "force-dynamic"
+
 export default async function TripDetailPage({
   params,
 }: {

@@ -3,6 +3,8 @@ import { listTripsAccessibleByUser } from "@/modules/trips/repository"
 import { DashboardContent } from "@/components/dashboard/dashboard-content"
 import { redirect } from "next/navigation"
 
+export const dynamic = "force-dynamic"
+
 export default async function Page() {
   const user = await requireAppUser()
   if (!user) {

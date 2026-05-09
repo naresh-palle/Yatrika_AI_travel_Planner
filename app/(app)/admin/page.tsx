@@ -5,6 +5,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { requireAdmin } from "@/lib/auth/is-admin"
 import { db } from "@/lib/db"
 
+export const dynamic = 'force-dynamic';
+
 export default async function AdminPage() {
   const admin = await requireAdmin()
   if (!admin) notFound()
@@ -46,4 +48,5 @@ export default async function AdminPage() {
     </div>
   )
 }
+
 

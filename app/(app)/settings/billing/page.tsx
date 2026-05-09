@@ -5,6 +5,8 @@ import { BillingActions } from "@/components/billing/billing-actions"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { db } from "@/lib/db"
 
+export const dynamic = 'force-dynamic';
+
 export default async function BillingPage() {
   const clerkUser = await currentUser()
   if (!clerkUser) redirect("/sign-in")
@@ -43,4 +45,5 @@ export default async function BillingPage() {
     </Card>
   )
 }
+
 

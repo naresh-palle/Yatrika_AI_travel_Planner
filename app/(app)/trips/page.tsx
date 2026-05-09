@@ -7,6 +7,8 @@ import { TripsListClient } from "@/components/trips/trips-list-client"
 import { db } from "@/lib/db"
 import { Button } from "@/components/ui/button"
 
+export const dynamic = 'force-dynamic';
+
 export default async function TripsPage() {
   const clerkUser = await currentUser()
   if (!clerkUser) redirect("/sign-in")
@@ -47,4 +49,5 @@ export default async function TripsPage() {
     </div>
   )
 }
+
 

@@ -5,6 +5,8 @@ import { canEditTrip, getTripRole } from "@/lib/auth/trip-access"
 import { db } from "@/lib/db"
 import { TripForm } from "@/components/trips/trip-form"
 
+export const dynamic = "force-dynamic"
+
 export default async function EditTripPage({
   params,
 }: {
