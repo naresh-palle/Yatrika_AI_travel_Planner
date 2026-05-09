@@ -7,7 +7,10 @@ const __dirname = path.dirname(__filename)
 
 const nextConfig = {
   outputFileTracingRoot: __dirname,
-  serverExternalPackages: ["@netlify/database"],
+  serverExternalPackages: ["@netlify/database", "@prisma/client"],
+  experimental: {
+    instrumentationHook: true,
+  },
   images: {
     unoptimized: true,
   },
