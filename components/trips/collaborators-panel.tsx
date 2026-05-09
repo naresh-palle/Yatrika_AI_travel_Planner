@@ -127,7 +127,7 @@ export function CollaboratorsPanel({
               </Button>
             </div>
             <p className="text-xs text-muted-foreground mt-2">
-              <strong>Note:</strong> The person must have signed into Yatrika at least once before they can be added. If they haven't, please ask them to log in first.
+              <strong>Note:</strong> "The person must have signed into Yatrika at least once before they can be added. If they haven't, please ask them to log in first."
             </p>
           </div>
         ) : null}
