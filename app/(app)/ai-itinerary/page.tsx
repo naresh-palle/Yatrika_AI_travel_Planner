@@ -267,7 +267,7 @@ Include 4-6 activities per day. Make descriptions vivid and genuinely useful. In
                 </p>
               </div>
 
-              <div className="w-full max-w-2xl bg-card text-card-foreground border rounded-3xl p-6 md:p-10 shadow-sm">
+              <div className="w-full max-w-3xl bg-card text-card-foreground border rounded-3xl p-6 md:p-10 shadow-sm">
                 <div className="text-xs font-semibold tracking-[0.1em] uppercase text-[#38BDF8] mb-6">
                   ✦ Create your itinerary
                 </div>
@@ -282,7 +282,7 @@ Include 4-6 activities per day. Make descriptions vivid and genuinely useful. In
                   
                   {requireFlights && (
                     <>
-                      <div className="md:col-span-3 flex flex-col gap-1.5">
+                      <div className="md:col-span-4 flex flex-col gap-1.5">
                         <label className="text-[11px] uppercase tracking-wider text-muted-foreground font-medium">Origin City</label>
                         <LocationAutocomplete
                           value={origin}
@@ -290,7 +290,7 @@ Include 4-6 activities per day. Make descriptions vivid and genuinely useful. In
                           placeholder="Where from?"
                         />
                       </div>
-                      <div className="md:col-span-3 flex flex-col gap-1.5">
+                      <div className="md:col-span-4 flex flex-col gap-1.5">
                         <label className="text-[11px] uppercase tracking-wider text-muted-foreground font-medium">Layovers</label>
                         <select
                           className="flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
@@ -305,7 +305,7 @@ Include 4-6 activities per day. Make descriptions vivid and genuinely useful. In
                     </>
                   )}
 
-                  <div className={`flex flex-col gap-1.5 ${requireFlights ? 'md:col-span-6' : 'md:col-span-12'}`}>
+                  <div className={`flex flex-col gap-1.5 ${requireFlights ? 'md:col-span-4' : 'md:col-span-12'}`}>
                     <label className="text-[11px] uppercase tracking-wider text-muted-foreground font-medium">Destination</label>
                     <LocationAutocomplete
                       value={destination}
