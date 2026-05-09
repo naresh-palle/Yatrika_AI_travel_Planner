@@ -12,7 +12,7 @@ import {
   useMapEvents,
 } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
-import { MapPin, Navigation, Save, Trash2 } from "lucide-react";
+import { MapPin, Navigation, Save, Trash2, Map as MapIcon, Route } from "lucide-react";
 import { Place, Coordinates } from "@/types/map";
 import { getBounds, fixLeafletIcon } from "@/lib/map-utils";
 import { SearchBox } from "./SearchBox";
@@ -135,6 +135,59 @@ export default function TravelMap() {
     <div className="relative w-full h-[calc(100vh-80px)] sm:h-screen bg-[#0B1F33] overflow-hidden">
       {/* Search Overlay */}
       <SearchBox />
+
+      {/* Route Builder Panel */}
+      <div className="absolute top-24 left-4 z-[1000] w-72 bg-[#0B1F33]/90 backdrop-blur-md border border-white/10 rounded-2xl shadow-2xl p-4 flex flex-col max-h-[calc(100vh-140px)]">
+        <div className="flex items-center gap-2 mb-3 text-[#38BDF8]">
+          <Route className="w-5 h-5" />
+          <h2 className="font-bold text-white">Route Builder</h2>
+        </div>
+        
+        {places.length === 0 ? (
+          <div className="text-sm text-white/50 text-center py-6 bg-white/5 rounded-xl border border-white/5">
+            <MapIcon className="w-8 h-8 mx-auto mb-2 opacity-50" />
+            <p>Click anywhere on the map or use search to add stops to your route.</p>
+          </div>
+        ) : (
+          <div className="flex flex-col gap-2 overflow-y-auto pr-1">
+            {places.map((place, i) => (
+              <div key={place.id} className="flex items-center justify-between bg-white/5 border border-white/10 rounded-xl p-2 group">
+                <div className="flex items-center gap-3 overflow-hidden">
+                  <div className="flex-shrink-0 w-6 h-6 rounded-full bg-[#38BDF8]/20 text-[#38BDF8] flex items-center justify-center text-xs font-bold">
+                    {i + 1}
+                  </div>
+                  <div className="truncate text-sm text-white/90">
+                    {place.name.split(',')[0]}
+                  </div>
+                </div>
+                <button
+                  onClick={() => handleRemovePlace(place.id)}
+                  className="text-white/30 hover:text-red-400 p-1 transition-colors"
+                  title="Remove stop"
+                >
+                  <Trash2 className="w-4 h-4" />
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {places.length > 0 && (
+          <div className="mt-4 pt-4 border-t border-white/10 flex flex-col gap-2">
+            <button
+              onClick={() => {
+                places.forEach(p => handleRemovePlace(p.id));
+              }}
+              className="text-xs text-white/50 hover:text-white transition-colors"
+            >
+              Clear all stops
+            </button>
+            <button className="w-full bg-[#38BDF8] text-[#0B1F33] hover:bg-[#38BDF8]/90 font-bold py-2 rounded-xl flex items-center justify-center gap-2 transition-colors">
+              <Save className="w-4 h-4" /> Save Route
+            </button>
+          </div>
+        )}
+      </div>
 
       {/* Map Instance */}
       <MapContainer

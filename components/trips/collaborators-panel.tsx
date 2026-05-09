@@ -126,7 +126,9 @@ export function CollaboratorsPanel({
                 Add
               </Button>
             </div>
-            <p className="text-xs text-muted-foreground">The person must have an account to be added as a collaborator.</p>
+            <p className="text-xs text-muted-foreground mt-2">
+              <strong>Note:</strong> The person must have signed into Yatrika at least once before they can be added. If they haven't, please ask them to log in first.
+            </p>
           </div>
         ) : null}
 

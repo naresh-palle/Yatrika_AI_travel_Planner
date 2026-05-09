@@ -452,23 +452,33 @@ Include 4-6 activities per day. Make descriptions vivid and genuinely useful. In
               className="py-12 max-w-4xl mx-auto print:py-0 print:max-w-none print:bg-white print:text-black print:absolute print:inset-0 print:z-50"
             >
               {/* Action Buttons */}
-              <div className="flex justify-end gap-3 mb-8 print:hidden">
+              <div className="flex justify-between items-center mb-8 print:hidden">
                 <button
-                  onClick={handleDownloadPdf}
-                  className="flex items-center gap-2 px-4 py-2 text-sm font-medium bg-secondary text-secondary-foreground hover:bg-secondary/80 rounded-lg transition-colors border border-border"
+                  onClick={() => {
+                    setItinerary(null);
+                    window.scrollTo({ top: 0, behavior: "smooth" });
+                  }}
+                  className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground border rounded-lg hover:bg-muted transition-all"
                 >
-                  <Download className="w-4 h-4" />
-                  Save PDF
+                  ← Back to Planner
                 </button>
-                <button
-                  onClick={handleSaveTrip}
-                  disabled={isSaving || hasSaved}
-                  className={`flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg transition-colors shadow-sm ${
-                    hasSaved 
-                      ? "bg-emerald-500/10 text-emerald-500 border border-emerald-500/20" 
-                      : "bg-[#38BDF8] text-[#0B1F33] hover:bg-[#38BDF8]/90"
-                  }`}
-                >
+                <div className="flex gap-3">
+                  <button
+                    onClick={handleDownloadPdf}
+                    className="flex items-center gap-2 px-4 py-2 text-sm font-medium bg-secondary text-secondary-foreground hover:bg-secondary/80 rounded-lg transition-colors border border-border"
+                  >
+                    <Download className="w-4 h-4" />
+                    Save PDF
+                  </button>
+                  <button
+                    onClick={handleSaveTrip}
+                    disabled={isSaving || hasSaved}
+                    className={`flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg transition-colors shadow-sm ${
+                      hasSaved 
+                        ? "bg-emerald-500/10 text-emerald-500 border border-emerald-500/20" 
+                        : "bg-[#38BDF8] text-[#0B1F33] hover:bg-[#38BDF8]/90"
+                    }`}
+                  >
                   {isSaving ? (
                     <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
                   ) : hasSaved ? (
@@ -488,6 +498,7 @@ Include 4-6 activities per day. Make descriptions vivid and genuinely useful. In
                     View Saved Trip ↗
                   </a>
                 )}
+                </div>
               </div>
 
               <div className="text-center mb-16">
