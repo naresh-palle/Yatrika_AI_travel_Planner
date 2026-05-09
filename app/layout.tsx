@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from 'next'
 import { Inter, Poppins, Geist_Mono } from 'next/font/google'
-import { Analytics } from '@vercel/analytics/next'
+
 import { ClerkProvider } from "@clerk/nextjs"
 import '@fontsource/poppins/400.css'
 import '@fontsource/poppins/500.css'
@@ -102,7 +102,6 @@ export default function RootLayout({
             <Toaster richColors closeButton />
           </AppProviders>
         </ClerkProvider>
-        {process.env.NODE_ENV === 'production' && <Analytics />}
       </body>
     </html>
   )

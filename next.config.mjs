@@ -7,6 +7,7 @@ const __dirname = path.dirname(__filename)
 
 const nextConfig = {
   outputFileTracingRoot: __dirname,
+  serverExternalPackages: ["@netlify/database"],
   images: {
     unoptimized: true,
   },
