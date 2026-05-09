@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Save, Download, Check } from "lucide-react";
 import { LocationAutocomplete } from "@/components/ui/location-autocomplete";
+import { useAuth, useClerk } from "@clerk/nextjs";
 
 type Activity = {
   time: string;
@@ -76,6 +77,9 @@ export default function AiItineraryPage() {
   const [savedTripId, setSavedTripId] = useState<string | null>(null);
 
   const itineraryRef = useRef<HTMLDivElement>(null);
+  
+  const { isSignedIn } = useAuth();
+  const clerk = useClerk();
 
   useEffect(() => {
     let interval: NodeJS.Timeout;
@@ -193,6 +197,10 @@ Include 4-6 activities per day. Make descriptions vivid and genuinely useful. In
   };
 
   const handleSaveTrip = async () => {
+    if (!isSignedIn) {
+      clerk.redirectToSignIn({ returnBackUrl: window.location.href });
+      return;
+    }
     if (!itinerary) return;
     setIsSaving(true);
     try {
@@ -226,6 +234,10 @@ Include 4-6 activities per day. Make descriptions vivid and genuinely useful. In
   };
 
   const handleDownloadPdf = () => {
+    if (!isSignedIn) {
+      clerk.redirectToSignIn({ returnBackUrl: window.location.href });
+      return;
+    }
     window.print();
   };
 

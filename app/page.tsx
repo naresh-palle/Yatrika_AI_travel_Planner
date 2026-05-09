@@ -30,7 +30,8 @@ export default function Home() {
       <div className="relative z-10">
         <Navbar />
         
-        {/* Main Page (Top) - Travel Your Way */}
+        {/* Main Page (Top) - Hero and TripTypes */}
+        <Hero />
         <TripTypes />
         <TrustBadges />
         
@@ -51,7 +52,6 @@ export default function Home() {
         <ItineraryShowcase />
         <SmartPlanning />
         <Features />
-        <Hero />
         
         <CTA />
         <Footer />

@@ -248,7 +248,7 @@ export function TripTypes() {
               transition={{ duration: 0.5, delay: index * 0.1 }}
               whileHover={{ y: -8, scale: 1.02 }}
               className="group relative rounded-[24px] overflow-hidden cursor-pointer"
-              onClick={() => window.location.href = '/sign-in'}
+              onClick={() => window.location.href = '/ai-itinerary'}
             >
               {/* Card Background Image */}
               <div className="aspect-[4/5] relative w-full">
