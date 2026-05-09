@@ -25,6 +25,7 @@ export function CollaboratorsPanel({
   const [collaborators, setCollaborators] = useState(initialCollaborators)
   const [email, setEmail] = useState("")
   const [error, setError] = useState<string | null>(null)
+  const [success, setSuccess] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
 
   async function refresh() {
@@ -34,20 +35,23 @@ export function CollaboratorsPanel({
   }
 
   async function add() {
+    if (!email.trim()) return
     setLoading(true)
     setError(null)
+    setSuccess(null)
     try {
       const res = await fetch(`/api/trips/${tripId}/collaborators`, {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ email, role: CollaboratorRole.VIEWER }),
+        body: JSON.stringify({ email: email.trim(), role: CollaboratorRole.VIEWER }),
       })
       const json = (await res.json()) as { error?: string }
-      if (!res.ok) throw new Error(json.error ?? "Add failed")
+      if (!res.ok) throw new Error(json.error ?? "Failed to add collaborator")
       setEmail("")
+      setSuccess(`${email.trim()} was added as a collaborator. They will see a notification when they log in.`)
       await refresh()
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Add failed")
+      setError(e instanceof Error ? e.message : "Failed to add collaborator")
     } finally {
       setLoading(false)
     }
@@ -56,6 +60,7 @@ export function CollaboratorsPanel({
   async function remove(collaboratorId: string) {
     setLoading(true)
     setError(null)
+    setSuccess(null)
     try {
       const res = await fetch(`/api/trips/${tripId}/collaborators`, {
         method: "DELETE",
@@ -63,6 +68,7 @@ export function CollaboratorsPanel({
         body: JSON.stringify({ collaboratorId }),
       })
       if (!res.ok) throw new Error("Remove failed")
+      setSuccess("Collaborator removed.")
       await refresh()
     } catch (e) {
       setError(e instanceof Error ? e.message : "Remove failed")
@@ -74,6 +80,7 @@ export function CollaboratorsPanel({
   async function changeRole(collaboratorId: string, role: CollaboratorRole) {
     setLoading(true)
     setError(null)
+    setSuccess(null)
     try {
       const res = await fetch(`/api/trips/${tripId}/collaborators`, {
         method: "PATCH",
@@ -81,6 +88,7 @@ export function CollaboratorsPanel({
         body: JSON.stringify({ collaboratorId, role }),
       })
       if (!res.ok) throw new Error("Role update failed")
+      setSuccess("Role updated.")
       await refresh()
     } catch (e) {
       setError(e instanceof Error ? e.message : "Role update failed")
@@ -96,15 +104,29 @@ export function CollaboratorsPanel({
       </CardHeader>
       <CardContent className="space-y-3">
         {canManage ? (
-          <div className="flex gap-2">
-            <Input
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="Add collaborator by email"
-            />
-            <Button onClick={add} disabled={loading || !email}>
-              Add
-            </Button>
+          <div className="space-y-1">
+            <div className="flex gap-2">
+              <Input
+                type="email"
+                value={email}
+                onChange={(e) => {
+                  setEmail(e.target.value)
+                  setError(null)
+                  setSuccess(null)
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    e.preventDefault()
+                    add()
+                  }
+                }}
+                placeholder="Enter collaborator's email address"
+              />
+              <Button onClick={add} disabled={loading || !email.trim()}>
+                Add
+              </Button>
+            </div>
+            <p className="text-xs text-muted-foreground">The person must have an account to be added as a collaborator.</p>
           </div>
         ) : null}
 
@@ -144,6 +166,7 @@ export function CollaboratorsPanel({
             ))
           )}
         </div>
+        {success ? <p className="text-sm text-green-600 dark:text-green-400">{success}</p> : null}
         {error ? <p className="text-sm text-destructive">{error}</p> : null}
       </CardContent>
     </Card>

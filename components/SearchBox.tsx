@@ -97,12 +97,19 @@ export function SearchBox() {
                     <div className="mt-0.5 bg-white/10 rounded-full p-1.5 mr-3 group-hover:bg-[#38BDF8]/20 group-hover:text-[#38BDF8] text-white/50 transition-colors">
                       <MapPin className="w-4 h-4" />
                     </div>
-                    <div>
-                      <div className="text-sm font-medium text-white line-clamp-1">
-                        {place.name.split(',')[0]}
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm font-medium text-white line-clamp-1">
+                          {place.name.split(',')[0]}
+                        </span>
+                        {place.country && (
+                          <span className="shrink-0 inline-block text-[10px] font-semibold text-[#38BDF8] bg-[#38BDF8]/10 border border-[#38BDF8]/20 rounded px-1.5 py-0.5 leading-none">
+                            {place.country}
+                          </span>
+                        )}
                       </div>
                       <div className="text-xs text-white/50 line-clamp-1 mt-0.5">
-                        {place.name.split(',').slice(1).join(',')}
+                        {[place.state, place.country].filter(Boolean).join(', ') || place.name.split(',').slice(1).join(',')}
                       </div>
                     </div>
                   </button>

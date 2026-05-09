@@ -9,6 +9,8 @@ export interface Place {
   coordinates: Coordinates;
   type?: string;
   description?: string;
+  country?: string;
+  state?: string;
 }
 
 export interface MarkerData {

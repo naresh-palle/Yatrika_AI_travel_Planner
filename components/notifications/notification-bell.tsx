@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
+import { useRouter } from "next/navigation"
 import { Bell } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
@@ -19,9 +20,11 @@ type NotificationItem = {
   message: string
   createdAt: string
   readAt: string | null
+  metadata?: { tripId?: string } | null
 }
 
 export function NotificationBell() {
+  const router = useRouter()
   const [items, setItems] = useState<NotificationItem[]>([])
   const [unreadCount, setUnreadCount] = useState(0)
 
@@ -37,6 +40,14 @@ export function NotificationBell() {
   useEffect(() => {
     void load()
   }, [])
+
+  async function handleClick(item: NotificationItem) {
+    await markRead(item.id, false)
+    const tripId = item.metadata?.tripId
+    if (tripId) {
+      router.push(`/trips/${tripId}`)
+    }
+  }
 
   async function markRead(notificationId?: string, markAll?: boolean) {
     await fetch("/api/notifications", {
@@ -71,8 +82,8 @@ export function NotificationBell() {
           items.map((item) => (
             <DropdownMenuItem
               key={item.id}
-              className="block cursor-pointer space-y-1"
-              onClick={() => markRead(item.id, false)}
+              className={`block cursor-pointer space-y-1 ${!item.readAt ? "bg-primary/5" : ""}`}
+              onClick={() => handleClick(item)}
             >
               <div className="text-sm font-medium">{item.title}</div>
               <div className="text-xs text-muted-foreground">{item.message}</div>

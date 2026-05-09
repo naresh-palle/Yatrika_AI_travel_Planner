@@ -23,7 +23,7 @@ export function useMapSearch() {
     timeoutRef.current = setTimeout(async () => {
       try {
         const response = await fetch(
-          `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(
+          `https://nominatim.openstreetmap.org/search?format=json&addressdetails=1&q=${encodeURIComponent(
             query
           )}&limit=5`,
           {
@@ -53,6 +53,8 @@ export function useMapSearch() {
             lng: parseFloat(item.lon),
           },
           type: item.type,
+          country: item.address?.country ?? undefined,
+          state: item.address?.state ?? undefined,
         }));
 
         setResults(formattedResults);
