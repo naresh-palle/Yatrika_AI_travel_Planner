@@ -198,7 +198,7 @@ Include 4-6 activities per day. Make descriptions vivid and genuinely useful. In
 
   const handleSaveTrip = async () => {
     if (!isSignedIn) {
-      clerk.redirectToSignIn({ returnBackUrl: window.location.href });
+      clerk.redirectToSignIn();
       return;
     }
     if (!itinerary) return;
@@ -235,7 +235,7 @@ Include 4-6 activities per day. Make descriptions vivid and genuinely useful. In
 
   const handleDownloadPdf = () => {
     if (!isSignedIn) {
-      clerk.redirectToSignIn({ returnBackUrl: window.location.href });
+      clerk.redirectToSignIn();
       return;
     }
     window.print();
