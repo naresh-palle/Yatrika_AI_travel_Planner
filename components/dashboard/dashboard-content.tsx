@@ -21,6 +21,8 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { useState } from "react"
+import { useRouter } from "next/navigation"
+import { toast } from "sonner"
 
 const savedDestinations = [
   { name: "Alleppey Backwaters", country: "India", score: "4.8", type: "Nature" },
@@ -30,7 +32,52 @@ const savedDestinations = [
 ] as const
 
 export function DashboardContent({ firstName, trips = [] }: { firstName?: string | null; trips?: any[] }) {
+  const router = useRouter()
   const [budgetOpen, setBudgetOpen] = useState(false)
+  const [selectedTrip, setSelectedTrip] = useState<string>("")
+  const [currency, setCurrency] = useState("USD")
+  const [amount, setAmount] = useState("")
+  const [category, setCategory] = useState("MISC")
+  const [details, setDetails] = useState("")
+  const [isSavingBudget, setIsSavingBudget] = useState(false)
+
+  const totalBudget = trips.reduce((acc, trip) => {
+    const tripBudget = trip.budgets?.reduce((sum: number, b: any) => sum + Number(b.amount || 0), 0) || 0
+    return acc + tripBudget
+  }, 0)
+
+  const handleSaveBudget = async () => {
+    if (!selectedTrip || !amount || isNaN(Number(amount))) {
+      toast.error("Please select a trip and enter a valid amount")
+      return
+    }
+
+    setIsSavingBudget(true)
+    try {
+      const res = await fetch(`/api/trips/${selectedTrip}/budget`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          category,
+          amount: Number(amount),
+          currency,
+          details: details || undefined,
+        }),
+      })
+
+      if (!res.ok) throw new Error("Failed to save budget")
+
+      toast.success("Budget saved successfully")
+      setBudgetOpen(false)
+      setAmount("")
+      setDetails("")
+      router.refresh()
+    } catch (error) {
+      toast.error("Failed to save budget. Please try again.")
+    } finally {
+      setIsSavingBudget(false)
+    }
+  }
   
   const dynamicOverview = [
     { label: "Total Trips", value: trips.length.toString(), icon: PlaneTakeoff, delta: "Lifetime" },
@@ -38,7 +85,7 @@ export function DashboardContent({ firstName, trips = [] }: { firstName?: string
     { label: "Collaborators", value: "0", icon: Users, delta: "Across all trips" },
     { 
       label: "Planned Budget", 
-      value: "$0", 
+      value: `$${totalBudget.toLocaleString()}`, 
       icon: DollarSign, 
       delta: (
         <button onClick={() => setBudgetOpen(true)} className="text-[#38BDF8] hover:underline font-medium focus:outline-none">
@@ -184,7 +231,7 @@ export function DashboardContent({ firstName, trips = [] }: { firstName?: string
           <div className="grid gap-4 py-4">
             <div className="space-y-2">
               <Label htmlFor="trip">Select Trip</Label>
-              <Select>
+              <Select value={selectedTrip} onValueChange={setSelectedTrip}>
                 <SelectTrigger id="trip">
                   <SelectValue placeholder="Choose a trip..." />
                 </SelectTrigger>
@@ -200,7 +247,7 @@ export function DashboardContent({ firstName, trips = [] }: { firstName?: string
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="currency">Currency</Label>
-                <Select defaultValue="USD">
+                <Select value={currency} onValueChange={setCurrency}>
                   <SelectTrigger id="currency">
                     <SelectValue />
                   </SelectTrigger>
@@ -215,12 +262,12 @@ export function DashboardContent({ firstName, trips = [] }: { firstName?: string
               </div>
               <div className="space-y-2">
                 <Label htmlFor="amount">Amount</Label>
-                <Input id="amount" type="number" placeholder="0.00" />
+                <Input id="amount" type="number" placeholder="0.00" value={amount} onChange={(e) => setAmount(e.target.value)} />
               </div>
             </div>
             <div className="space-y-2">
               <Label htmlFor="category">Category</Label>
-              <Select defaultValue="MISC">
+              <Select value={category} onValueChange={setCategory}>
                 <SelectTrigger id="category">
                   <SelectValue />
                 </SelectTrigger>
@@ -236,11 +283,13 @@ export function DashboardContent({ firstName, trips = [] }: { firstName?: string
             </div>
             <div className="space-y-2">
               <Label htmlFor="details">Additional Details</Label>
-              <Input id="details" placeholder="e.g. Flight to Paris, Hotel deposit..." />
+              <Input id="details" placeholder="e.g. Flight to Paris, Hotel deposit..." value={details} onChange={(e) => setDetails(e.target.value)} />
             </div>
           </div>
           <DialogFooter>
-            <Button onClick={() => setBudgetOpen(false)} className="w-full">Save Budget Details</Button>
+            <Button onClick={handleSaveBudget} disabled={isSavingBudget} className="w-full">
+              {isSavingBudget ? "Saving..." : "Save Budget Details"}
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

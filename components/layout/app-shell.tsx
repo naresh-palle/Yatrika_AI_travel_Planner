@@ -42,9 +42,9 @@ function SidebarNav({ collapsed = false }: { collapsed?: boolean }) {
           key={item.href}
           href={item.href}
           className={cn(
-            "flex items-center rounded-md px-3 py-2 text-sm font-medium transition-colors hover:bg-white/10 hover:text-white",
+            "flex items-center rounded-md px-3 py-2 text-sm font-medium transition-colors hover:bg-secondary hover:text-foreground",
             collapsed && "justify-center px-2",
-            pathname === item.href ? "bg-[#38BDF8]/15 text-[#38BDF8]" : "text-white/70"
+            pathname === item.href ? "bg-primary/10 text-primary" : "text-muted-foreground"
           )}
           title={collapsed ? item.label : undefined}
         >

@@ -47,13 +47,13 @@ export function LocationAutocomplete({
     setIsLoading(true);
     try {
       const response = await fetch(
-        `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(
+        `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(
           searchTerm
-        )}&count=5&language=en&format=json`
+        )}&format=json&limit=5&addressdetails=1`
       );
       const data = await response.json();
-      if (data.results) {
-        setResults(data.results);
+      if (data && data.length > 0) {
+        setResults(data);
         setIsOpen(true);
       } else {
         setResults([]);
@@ -80,9 +80,8 @@ export function LocationAutocomplete({
   };
 
   const handleSelect = (result: any) => {
-    const locationString = [result.name, result.admin1, result.country]
-      .filter(Boolean)
-      .join(", ");
+    // Nominatim returns a nicely formatted display_name
+    const locationString = result.display_name;
     
     setQuery(locationString);
     onChange(locationString);
@@ -112,7 +111,7 @@ export function LocationAutocomplete({
           <ul className="max-h-60 overflow-auto p-1 bg-background text-foreground rounded-md shadow-lg border">
             {results.map((result) => (
               <li
-                key={result.id}
+                key={result.place_id}
                 className="relative flex cursor-default select-none items-center rounded-sm px-2 py-2.5 text-sm outline-none hover:bg-muted hover:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50 cursor-pointer"
                 onClick={() => handleSelect(result)}
               >
@@ -120,7 +119,7 @@ export function LocationAutocomplete({
                 <div className="flex flex-col overflow-hidden">
                   <span className="font-medium truncate">{result.name}</span>
                   <span className="text-xs text-muted-foreground truncate">
-                    {[result.admin1, result.country].filter(Boolean).join(", ")}
+                    {result.display_name.split(", ").slice(1).join(", ")}
                   </span>
                 </div>
               </li>

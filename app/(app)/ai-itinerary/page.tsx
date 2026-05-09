@@ -64,6 +64,8 @@ export default function AiItineraryPage() {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [requireFlights, setRequireFlights] = useState(true);
+  const [flightLayover, setFlightLayover] = useState("Any flights");
+  const [customKeywords, setCustomKeywords] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [loadingPhraseIdx, setLoadingPhraseIdx] = useState(0);
   const [error, setError] = useState("");
@@ -115,13 +117,14 @@ export default function AiItineraryPage() {
     const vibeStr = selectedVibes.length ? selectedVibes.join(", ") : "Adventure";
     
     const flightInstructions = requireFlights
-      ? `\nOrigin City: ${origin || "Anywhere"}\nFlights: include suggested outbound and return flights.`
+      ? `\nOrigin City: ${origin || "Anywhere"}\nFlight Preference: ${flightLayover}\nFlights: include suggested outbound and return flights matching the preference.`
       : `\nFlights: Do NOT include flights. Return null for the flights object.`;
 
     const dateInstructions = startDate ? `\nStart Date: ${startDate}` : "";
+    const keywordInstructions = customKeywords.trim() ? `\nCustom Requirements/Keywords: ${customKeywords.trim()}` : "";
 
     const prompt = `You are an expert travel planner. Create a detailed ${days || 5}-day itinerary for: ${destination}.
-${flightInstructions}${dateInstructions}
+${flightInstructions}${dateInstructions}${keywordInstructions}
 Travel style: ${vibeStr}
 Hotel preference: ${hotelStyle}
 Budget level: ${budget}
@@ -278,14 +281,28 @@ Include 4-6 activities per day. Make descriptions vivid and genuinely useful. In
                   </div>
                   
                   {requireFlights && (
-                    <div className="md:col-span-6 flex flex-col gap-1.5">
-                      <label className="text-[11px] uppercase tracking-wider text-muted-foreground font-medium">Origin City</label>
-                      <LocationAutocomplete
-                        value={origin}
-                        onChange={setOrigin}
-                        placeholder="Where are you flying from?"
-                      />
-                    </div>
+                    <>
+                      <div className="md:col-span-3 flex flex-col gap-1.5">
+                        <label className="text-[11px] uppercase tracking-wider text-muted-foreground font-medium">Origin City</label>
+                        <LocationAutocomplete
+                          value={origin}
+                          onChange={setOrigin}
+                          placeholder="Where from?"
+                        />
+                      </div>
+                      <div className="md:col-span-3 flex flex-col gap-1.5">
+                        <label className="text-[11px] uppercase tracking-wider text-muted-foreground font-medium">Layovers</label>
+                        <select
+                          className="flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+                          value={flightLayover}
+                          onChange={(e) => setFlightLayover(e.target.value)}
+                        >
+                          <option value="Any flights">Any flights</option>
+                          <option value="Non-stop only">Non-stop only</option>
+                          <option value="Up to 1 stop">Up to 1 stop</option>
+                        </select>
+                      </div>
+                    </>
                   )}
 
                   <div className={`flex flex-col gap-1.5 ${requireFlights ? 'md:col-span-6' : 'md:col-span-12'}`}>
@@ -359,6 +376,16 @@ Include 4-6 activities per day. Make descriptions vivid and genuinely useful. In
                       <option value="Villa">Villa / Airbnb</option>
                     </select>
                   </div>
+                </div>
+
+                <div className="mb-6 flex flex-col gap-1.5">
+                  <label className="text-[11px] uppercase tracking-wider text-[#38BDF8] font-bold">✦ AI Keywords / Special Requests (Optional)</label>
+                  <textarea
+                    className="flex w-full rounded-xl border border-input bg-background px-3 py-3 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 resize-none h-20"
+                    placeholder="e.g. Include wheelchair accessible places, vegan restaurants only, prefer walking tours, need a layover in Dubai..."
+                    value={customKeywords}
+                    onChange={(e) => setCustomKeywords(e.target.value)}
+                  />
                 </div>
 
                 <div className="mb-8">

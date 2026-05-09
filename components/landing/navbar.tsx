@@ -61,7 +61,7 @@ export function Navbar() {
               <span 
                 className={cn(
                   "text-xl font-bold transition-colors duration-300",
-                  isScrolled ? "text-foreground" : "text-white"
+                  "text-foreground"
                 )}
                 style={{ fontFamily: 'var(--font-heading)' }}
               >
@@ -77,9 +77,7 @@ export function Navbar() {
                   href={link.href}
                   className={cn(
                     "px-4 py-2 text-sm font-medium transition-colors rounded-lg",
-                    isScrolled 
-                      ? "text-muted-foreground hover:text-foreground hover:bg-secondary" 
-                      : "text-white/80 hover:text-white hover:bg-white/10"
+                    "text-muted-foreground hover:text-foreground hover:bg-secondary"
                   )}
                 >
                   {link.label}

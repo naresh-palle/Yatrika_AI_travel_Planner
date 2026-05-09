@@ -22,6 +22,7 @@ export async function listTripsAccessibleByUser(userId: string) {
     },
     include: {
       primaryDestination: true,
+      budgets: true,
     },
     orderBy: { updatedAt: "desc" },
   })
