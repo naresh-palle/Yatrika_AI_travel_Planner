@@ -23,6 +23,7 @@ export async function POST(req: Request) {
         model: "llama3-70b-8192",
         messages: [{ role: "user", content: prompt }],
         temperature: 0.7,
+        response_format: { type: "json_object" }
       })
     });
 
