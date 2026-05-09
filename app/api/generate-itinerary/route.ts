@@ -1,5 +1,4 @@
 import { NextResponse } from 'next/server';
-import { GoogleGenerativeAI } from '@google/generative-ai';
 
 export async function POST(req: Request) {
   try {
@@ -9,32 +8,32 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Prompt is required' }, { status: 400 });
     }
 
-    const apiKey = process.env.GEMINI_API_KEY;
+    const apiKey = process.env.GROQ_API_KEY;
     if (!apiKey) {
-      return NextResponse.json({ error: 'GEMINI_API_KEY is not configured on the server.' }, { status: 500 });
+      return NextResponse.json({ error: 'GROQ_API_KEY is not configured on the server.' }, { status: 500 });
     }
 
-    // Initialize the official Google Generative AI SDK
-    const genAI = new GoogleGenerativeAI(apiKey);
-    
-    // Dynamically fetch the list of available models for this specific API key to prevent 404 errors
-    const modelsRes = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${apiKey}`);
-    const modelsData = await modelsRes.json();
-    const availableModels = modelsData.models
-      ?.filter((m: any) => m.supportedGenerationMethods?.includes("generateContent") && m.name.includes("gemini"))
-      .map((m: any) => m.name.replace('models/', '')) || [];
+    const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${apiKey}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        model: "llama3-70b-8192",
+        messages: [{ role: "user", content: prompt }],
+        temperature: 0.7,
+      })
+    });
 
-    if (availableModels.length === 0) {
-      throw new Error("Your API key does not have access to any Gemini text generation models. Please ensure it is a valid Google AI Studio key.");
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(`Groq API Error: ${errorData.error?.message || response.statusText}`);
     }
 
-    // Pick the first valid model (usually gemini-1.5-flash or similar)
-    const model = genAI.getGenerativeModel({ model: availableModels[0] });
+    const data = await response.json();
+    const generatedText = data.choices[0].message.content;
 
-    // Generate the itinerary
-    const result = await model.generateContent(prompt);
-    const generatedText = result.response.text();
-    
     // Return in the format the frontend expects (mimicking Claude's structure)
     return NextResponse.json({
       content: [{ text: generatedText }]
