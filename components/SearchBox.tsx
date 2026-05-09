@@ -111,7 +111,7 @@ export function SearchBox() {
             </ul>
           ) : (
             <div className="p-6 text-sm text-white/50 font-medium text-center">
-              No results found for "{query}"
+              No results found for &quot;{query}&quot;
             </div>
           )}
         </div>

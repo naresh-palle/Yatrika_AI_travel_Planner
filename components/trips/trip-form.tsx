@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client"
 
 import { useMemo, useState, useTransition } from "react"
@@ -342,4 +343,5 @@ export function TripForm({ mode, tripId, defaultValues, isItinerary = false }: T
     </Card>
   )
 }
+
 

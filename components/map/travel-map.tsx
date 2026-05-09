@@ -95,6 +95,7 @@ export function TravelMap() {
       }
     }, 600)
     return () => clearTimeout(timer)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [search])
 
   async function runSearch(queryToSearch = search) {

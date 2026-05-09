@@ -120,7 +120,7 @@ export function DashboardContent({ firstName, trips = [] }: { firstName?: string
                   </Link>
                 ))
               ) : (
-                <div className="text-sm text-muted-foreground text-center py-6">You haven't planned any trips yet.</div>
+                <div className="text-sm text-muted-foreground text-center py-6">You haven&apos;t planned any trips yet.</div>
               )}
             </CardContent>
           </Card>
