@@ -11,7 +11,7 @@ export async function GET(req: Request) {
   }
 
   // Use OpenStreetMap Nominatim API
-  const endpoint = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(parsed.data.q)}&limit=5`
+  const endpoint = `https://nominatim.openstreetmap.org/search?format=json&addressdetails=1&q=${encodeURIComponent(parsed.data.q)}&limit=5`
   
   const res = await fetch(endpoint, {
     headers: {
@@ -33,6 +33,8 @@ export async function GET(req: Request) {
     place_name: place.display_name,
     text: place.name || place.display_name.split(',')[0],
     center: [parseFloat(place.lon), parseFloat(place.lat)],
+    country: place.address?.country ?? null,
+    state: place.address?.state ?? null,
   }))
 
   return NextResponse.json({ features })

@@ -59,10 +59,14 @@ export async function POST(
   if (!parsed.success) return NextResponse.json({ error: "Invalid payload" }, { status: 400 })
 
   const target = await db.user.findFirst({
-    where: { email: parsed.data.email },
+    where: { email: { equals: parsed.data.email, mode: "insensitive" } },
     select: { id: true },
   })
-  if (!target) return NextResponse.json({ error: "User not found by email" }, { status: 404 })
+  if (!target) return NextResponse.json({ error: "No account found for this email. The person must sign up before they can be added as a collaborator." }, { status: 404 })
+
+  if (target.id === user.id) {
+    return NextResponse.json({ error: "You cannot add yourself as a collaborator." }, { status: 400 })
+  }
 
   const collaborator = await db.collaborator.upsert({
     where: { tripId_userId: { tripId, userId: target.id } },
@@ -71,12 +75,17 @@ export async function POST(
     include: { user: { select: { id: true, email: true, name: true, imageUrl: true } } },
   })
 
+  const trip = await db.trip.findUnique({
+    where: { id: tripId },
+    select: { title: true },
+  })
+
   await db.notification.create({
     data: {
       userId: target.id,
       type: "INFO",
       title: "Added to trip",
-      message: "You were added as a collaborator to a trip.",
+      message: `You were added as a ${collaborator.role.toLowerCase()} to "${trip?.title ?? "a trip"}".`,
       metadata: { tripId, role: collaborator.role },
     },
   })
