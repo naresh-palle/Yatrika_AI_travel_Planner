@@ -1,6 +1,8 @@
-[build]
-  command = "npx prisma generate && npm run build"
-  publish = ".next"
-
 [[plugins]]
   package = "@netlify/plugin-nextjs"
+
+[build.environment]
+  # These NEXT_PUBLIC_ Clerk variables have values that are simple URL paths
+  # (e.g. /sign-in, /sign-up, /dashboard) and are intentionally public-facing.
+  # They legitimately appear throughout the codebase as route references.
+  SECRETS_SCAN_OMIT_KEYS = "NEXT_PUBLIC_CLERK_SIGN_IN_URL,NEXT_PUBLIC_CLERK_SIGN_UP_URL,NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL,NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL,NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY"
