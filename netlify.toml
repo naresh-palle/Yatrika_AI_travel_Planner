@@ -2,6 +2,7 @@
   package = "@netlify/plugin-nextjs"
 
 [build.environment]
+  NODE_VERSION = "22"
   # These NEXT_PUBLIC_ Clerk variables have values that are simple URL paths
   # (e.g. /sign-in, /sign-up, /dashboard) and are intentionally public-facing.
   # They legitimately appear throughout the codebase as route references.
