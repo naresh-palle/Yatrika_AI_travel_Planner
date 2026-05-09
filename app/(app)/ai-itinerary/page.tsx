@@ -92,6 +92,17 @@ export default function AiItineraryPage() {
   }, [isLoading]);
 
   useEffect(() => {
+    // Check URL parameters on mount
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      const destParam = params.get("destination");
+      if (destParam) {
+        setDestination(destParam);
+      }
+    }
+  }, []);
+
+  useEffect(() => {
     if (startDate && endDate) {
       const start = new Date(startDate);
       const end = new Date(endDate);

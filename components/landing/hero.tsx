@@ -4,6 +4,9 @@ import { motion } from 'framer-motion'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import Link from 'next/link'
+import { useState } from 'react'
+import { useRouter } from 'next/navigation'
+import { LocationAutocomplete } from '@/components/ui/location-autocomplete'
 import {
   ArrowRight,
   Play,
@@ -22,6 +25,17 @@ const stats = [
 ]
 
 export function Hero() {
+  const router = useRouter()
+  const [destination, setDestination] = useState("")
+
+  const handleSearch = () => {
+    if (destination) {
+      router.push(`/ai-itinerary?destination=${encodeURIComponent(destination)}`);
+    } else {
+      router.push('/ai-itinerary');
+    }
+  }
+
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20 pb-12">
       {/* Dark Cinematic Gradient Background */}
@@ -86,30 +100,27 @@ export function Hero() {
               just a few clicks away.
             </motion.p>
 
-            {/* CTAs */}
+            {/* Quick Search CTA */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.5 }}
-              className="mt-8 flex flex-col sm:flex-row gap-4 justify-center lg:justify-start"
+              className="mt-8 relative z-50 flex flex-col sm:flex-row items-center gap-3 justify-center lg:justify-start max-w-lg mx-auto lg:mx-0"
             >
+              <div className="w-full sm:flex-1 relative z-50">
+                <LocationAutocomplete 
+                  placeholder="Where do you want to go?" 
+                  value={destination} 
+                  onChange={setDestination} 
+                />
+              </div>
               <Button
                 size="lg"
-                asChild
-                className="text-base px-8 text-white font-semibold shadow-xl group border-0 hover:shadow-lg bg-gradient-to-r from-[#0F4C81] to-[#38BDF8]"
+                onClick={handleSearch}
+                className="w-full sm:w-auto text-base px-8 text-[#0B1F33] font-bold shadow-xl group border-0 hover:shadow-lg bg-gradient-to-r from-[#38BDF8] to-[#FF7A59]"
               >
-                <Link href="/ai-itinerary">
-                  Start Planning Free
-                  <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                </Link>
-              </Button>
-              <Button
-                size="lg"
-                variant="outline"
-                className="text-base px-8 group bg-white/5 border-white/20 text-white hover:bg-white/10 hover:text-white backdrop-blur-sm"
-              >
-                <Play className="mr-2 w-5 h-5 group-hover:scale-110 transition-transform" />
-                Watch Demo
+                Plan with AI
+                <Sparkles className="ml-2 w-5 h-5 group-hover:scale-110 transition-transform" />
               </Button>
             </motion.div>
 
