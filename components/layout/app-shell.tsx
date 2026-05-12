@@ -4,33 +4,27 @@ import { useState } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import {
-  Compass,
   LayoutDashboard,
   Luggage,
   Map,
   Menu,
   PanelLeftClose,
   PanelLeftOpen,
-  Settings,
   Sparkles,
   Plane,
 } from "lucide-react"
 import { motion } from "framer-motion"
 
 import { UserMenu } from "@/components/auth/user-menu"
-import { NotificationBell } from "@/components/notifications/notification-bell"
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import { cn } from "@/lib/utils"
 
 const nav = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
-  { href: "/trips", label: "Trips", icon: Luggage },
-  { href: "/ai-itinerary", label: "AI Itinerary", icon: Sparkles },
+  { href: "/trips", label: "My Trips", icon: Luggage },
+  { href: "/ai-itinerary", label: "AI Planner", icon: Sparkles },
   { href: "/travel-map", label: "Travel Map", icon: Map },
-  { href: "/settings/billing", label: "Billing", icon: Settings },
-  { href: "/admin", label: "Admin", icon: Settings },
-  { href: "/", label: "Explore", icon: Compass },
 ] as const
 
 function SidebarNav({ collapsed = false }: { collapsed?: boolean }) {
@@ -42,13 +36,15 @@ function SidebarNav({ collapsed = false }: { collapsed?: boolean }) {
           key={item.href}
           href={item.href}
           className={cn(
-            "flex items-center rounded-md px-3 py-2 text-sm font-medium transition-colors hover:bg-secondary hover:text-foreground",
+            "flex items-center rounded-lg px-3 py-2.5 text-sm font-medium transition-colors hover:bg-secondary hover:text-foreground",
             collapsed && "justify-center px-2",
-            pathname === item.href ? "bg-primary/10 text-primary" : "text-muted-foreground"
+            pathname === item.href
+              ? "bg-[#0F4C81]/10 text-[#0F4C81]"
+              : "text-muted-foreground"
           )}
           title={collapsed ? item.label : undefined}
         >
-          <item.icon className={cn("h-4 w-4", !collapsed && "mr-2")} />
+          <item.icon className={cn("h-4 w-4", !collapsed && "mr-3")} />
           {!collapsed ? item.label : null}
         </Link>
       ))}
@@ -73,17 +69,27 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                   </Button>
                 </SheetTrigger>
                 <SheetContent side="left" className="w-72">
-                  <div className="mb-4 text-sm font-semibold">App</div>
+                  <div className="flex items-center gap-2 mb-6">
+                    <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#0F4C81] to-[#38BDF8] flex items-center justify-center">
+                      <Plane className="h-4 w-4 text-white" />
+                    </div>
+                    <span className="text-lg font-bold" style={{ fontFamily: 'var(--font-heading)' }}>Yatrika</span>
+                  </div>
                   <SidebarNav />
                 </SheetContent>
               </Sheet>
-              <Link href="/" className="flex items-center gap-2 font-serif text-lg font-bold text-[#38BDF8] transition-colors hover:text-[#FF7A59]">
-                <Plane className="h-5 w-5" />
-                <span>Yatrika</span>
+              <Link
+                href="/"
+                className="flex items-center gap-2 font-bold text-lg transition-colors hover:text-[#38BDF8]"
+                style={{ fontFamily: 'var(--font-heading)' }}
+              >
+                <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#0F4C81] to-[#38BDF8] flex items-center justify-center">
+                  <Plane className="h-4 w-4 text-white" />
+                </div>
+                <span className="text-[#0F4C81]">Yatrika</span>
               </Link>
             </div>
             <div className="flex items-center gap-1">
-              <NotificationBell />
               <Button
                 variant="ghost"
                 size="icon"
@@ -110,10 +116,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             transition={{ duration: 0.2, ease: "easeInOut" }}
             className="hidden md:block shrink-0 print:hidden"
           >
-            <div className="rounded-lg border bg-card p-3">
-              <div className="mb-2 text-xs font-semibold text-muted-foreground">
-                {sidebarCollapsed ? "Nav" : "Navigation"}
-              </div>
+            <div className="sticky top-20 rounded-xl border bg-card p-3">
               <SidebarNav collapsed={sidebarCollapsed} />
             </div>
           </motion.aside>
@@ -123,4 +126,3 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     </div>
   )
 }
-
