@@ -12,19 +12,14 @@ export default function Home() {
   return (
     <main className="min-h-screen relative overflow-hidden bg-[#0B1F33]">
       {/* Global Cinematic Sunrise Background */}
-      <div className="fixed inset-0 -z-20">
-        <div 
-          className="absolute inset-0 opacity-80"
-          style={{
-            backgroundImage: "url('/tirumala-memento.png')",
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            backgroundAttachment: 'fixed'
-          }}
+      <div className="fixed inset-0 z-0 pointer-events-none">
+        <img 
+          src="/tirumala-memento.png"
+          alt="Tirumala Temple Background"
+          className="absolute inset-0 w-full h-full object-cover opacity-80"
         />
         {/* Sunrise-style vignette/overlay: Amber to Deep Purple/Blue */}
-        <div className="absolute inset-0 bg-gradient-to-b from-[#FFB36B]/20 via-transparent to-[#0B1F33]/90" />
-        <div className="absolute inset-0 bg-black/20" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#FFB36B]/20 via-transparent to-[#0B1F33]/95" />
       </div>
 
       {/* Sunrise Glowing Blobs */}

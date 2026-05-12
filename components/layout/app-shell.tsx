@@ -31,15 +31,11 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex min-h-screen relative overflow-hidden bg-[#0B1F33]">
       {/* Cinematic Sunrise Background (Authenticated) */}
-      <div className="fixed inset-0 -z-20">
-        <div 
-          className="absolute inset-0 opacity-40 grayscale-[0.3]"
-          style={{
-            backgroundImage: "url('/tirumala-memento.png')",
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            backgroundAttachment: 'fixed'
-          }}
+      <div className="fixed inset-0 z-0 pointer-events-none">
+        <img 
+          src="/tirumala-memento.png"
+          alt="Tirumala Temple Background"
+          className="absolute inset-0 w-full h-full object-cover opacity-40 grayscale-[0.3]"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-[#FFB36B]/10 via-transparent to-[#0B1F33]/95" />
         <div className="absolute inset-0 backdrop-blur-[2px]" />
