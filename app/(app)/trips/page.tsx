@@ -33,7 +33,7 @@ export default async function TripsPage() {
           <p className="text-sm text-muted-foreground">Plan and manage your itineraries.</p>
         </div>
         <Button asChild>
-          <Link href="/trips/new">
+          <Link href="/ai-itinerary">
             <Plus className="mr-2 h-4 w-4" />
             New Trip
           </Link>

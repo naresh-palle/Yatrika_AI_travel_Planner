@@ -110,7 +110,7 @@ export default function ItineraryMap({ days, destination }: ItineraryMapProps) {
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-          className="map-tiles-dark"
+          className="map-tiles-grayscale"
         />
         
         {allActivities.length > 0 ? (
@@ -158,8 +158,8 @@ export default function ItineraryMap({ days, destination }: ItineraryMapProps) {
       </MapContainer>
 
       <style jsx global>{`
-        .map-tiles-dark {
-          filter: brightness(0.6) invert(1) contrast(3) hue-rotate(200deg) saturate(0.3) brightness(0.7);
+        .map-tiles-grayscale {
+          filter: grayscale(1) brightness(0.8) contrast(1.2);
         }
         .itinerary-map-popup .leaflet-popup-content-wrapper {
           border-radius: 12px;
@@ -169,7 +169,8 @@ export default function ItineraryMap({ days, destination }: ItineraryMapProps) {
           margin: 8px 12px;
         }
         .leaflet-container {
-          background-color: #0B1F33;
+          background-color: #f3f4f6;
+          border-radius: 32px;
         }
       `}</style>
     </div>

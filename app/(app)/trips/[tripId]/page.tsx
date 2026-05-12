@@ -2,7 +2,17 @@ import Image from "next/image"
 import Link from "next/link"
 import { currentUser } from "@clerk/nextjs/server"
 import { notFound, redirect } from "next/navigation"
-import { CalendarDays, MapPin, Users } from "lucide-react"
+import { CalendarDays, MapPin, Users, Sparkles, Clock, Heart, Share2, Mail, Download, Pencil, Save, Check } from "lucide-react"
+import dynamic from "next/dynamic"
+
+const ItineraryMap = dynamic(() => import("@/components/map/ItineraryMap"), {
+  ssr: false,
+  loading: () => (
+    <div className="w-full h-[400px] bg-muted animate-pulse rounded-3xl flex items-center justify-center text-muted-foreground">
+      Loading map engine...
+    </div>
+  ),
+});
 
 import { CollaboratorsPanel } from "@/components/trips/collaborators-panel"
 import { db } from "@/lib/db"
@@ -11,8 +21,10 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { DeleteTripButton } from "@/components/trips/delete-trip-button"
 import { ExportPdfButton } from "@/components/trips/export-pdf-button"
+import { TripPlanActions } from "@/components/trips/trip-plan-actions"
+import { TripAiSidebar } from "@/components/trips/trip-ai-sidebar"
 
-type Activity = { time: string; name: string; description: string; type: string; };
+type Activity = { time: string; name: string; description: string; type: string; coordinates?: { lat: number; lng: number } };
 type DayPlan = { day: number; title: string; estimated_budget: string; activities: Activity[]; };
 type Itinerary = { destination: string; tagline: string; flights: { outbound: string; return: string; estimated_cost: string; }; hotel: { name: string; description: string; estimated_cost: string; }; days: DayPlan[]; tips: string[]; };
 
@@ -85,23 +97,34 @@ export default async function TripDetailPage({
         </div>
       ) : null}
 
-      <div className="flex flex-wrap items-start justify-between gap-3">
-        <div>
-          <h1 className="text-3xl font-bold">{trip.title}</h1>
-          {!itinerary && (
-            <p className="text-sm text-muted-foreground mt-2">{trip.description ?? "No description"}</p>
-          )}
-        </div>
-        <div className="flex gap-2 print:hidden">
-          <ExportPdfButton />
-          {canEdit ? (
-            <Button asChild variant="outline">
-              <Link href={`/trips/${trip.id}/edit`}>Edit Settings</Link>
-            </Button>
-          ) : null}
-          {canDelete ? <DeleteTripButton tripId={trip.id} /> : null}
-        </div>
-      </div>
+      <div className="flex flex-col lg:flex-row gap-10 items-start">
+        {/* Left Column: AI Sidebar */}
+        <TripAiSidebar 
+          tripId={trip.id} 
+          destination={trip.primaryDestination?.name || itinerary?.destination || "Destination"} 
+        />
+
+        {/* Right Column: Itinerary Details */}
+        <div className="flex-1 w-full space-y-8">
+          <div className="relative pt-20 pb-12 px-8 md:px-12 bg-gradient-to-br from-[#7c3a2a] via-[#5c2a1c] to-background rounded-[40px] overflow-hidden shadow-2xl border border-white/10 mb-2">
+            <TripPlanActions 
+              tripTitle={itinerary?.tripTitle || trip.title} 
+              destination={trip.primaryDestination?.name || itinerary?.destination || "Destination"} 
+            />
+            
+            <div className="relative z-10">
+              <span className="text-[11px] tracking-[0.3em] uppercase text-white/60 font-bold mb-4 block">
+                {itinerary?.category || "Trip Plan"} • {trip.startDate && trip.endDate ? Math.ceil((trip.endDate.getTime() - trip.startDate.getTime()) / (1000 * 60 * 60 * 24)) : 5} days
+              </span>
+              <h1 className="font-serif text-4xl md:text-6xl font-bold text-white mb-3 leading-[1.1] tracking-tight">
+                {itinerary?.tripTitle || trip.title}
+              </h1>
+              <div className="flex items-center gap-2 text-white/80 text-lg md:text-xl font-medium">
+                <MapPin className="w-5 h-5 text-[#FFB36B]" />
+                {trip.primaryDestination?.name || itinerary?.destination || "Destination"}
+              </div>
+            </div>
+          </div>
 
       <Card>
         <CardContent className="grid gap-3 text-sm md:grid-cols-3 p-4">
@@ -154,6 +177,14 @@ export default async function TripDetailPage({
               )}
             </div>
           )}
+
+          {/* Map Integration */}
+          <div className="print:hidden">
+            <ItineraryMap 
+              days={itinerary.days} 
+              destination={itinerary.destination} 
+            />
+          </div>
 
           <div className="space-y-6">
             <h3 className="text-2xl font-bold font-serif mb-4">Daily Itinerary</h3>
@@ -225,12 +256,14 @@ export default async function TripDetailPage({
         </Card>
       )}
 
-      <div className="print:hidden">
-        <CollaboratorsPanel
-          tripId={trip.id}
-          initialCollaborators={trip.collaborators}
-          canManage={canManage}
-        />
+          <div className="print:hidden">
+            <CollaboratorsPanel
+              tripId={trip.id}
+              initialCollaborators={trip.collaborators}
+              canManage={canManage}
+            />
+          </div>
+        </div>
       </div>
     </div>
   )

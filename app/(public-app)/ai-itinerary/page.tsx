@@ -681,12 +681,13 @@ Include 4-6 activities per day. Make descriptions vivid and genuinely useful. In
                   </div>
 
                   {/* Actions Section */}
-                  <div className="bg-card border rounded-3xl p-5 shadow-sm space-y-4">
-                    <div className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-2">Actions</div>
+                  <div className="bg-[#0B1F33]/80 backdrop-blur-md border border-white/10 rounded-[32px] p-6 shadow-2xl space-y-5">
+                    <div className="inline-block px-2.5 py-1 bg-blue-600 text-white text-[10px] font-bold uppercase tracking-widest rounded-md">Actions</div>
+                    
                     <div className="grid grid-cols-2 gap-3">
                       <button
                         onClick={handleDownloadPdf}
-                        className="flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-semibold border rounded-xl hover:bg-muted transition-all"
+                        className="flex items-center justify-center gap-2 px-4 py-3.5 text-sm font-semibold border border-white/10 bg-white/5 text-white rounded-2xl hover:bg-white/10 transition-all active:scale-95"
                       >
                         <Share2 className="w-4 h-4" /> Export
                       </button>
@@ -695,21 +696,22 @@ Include 4-6 activities per day. Make descriptions vivid and genuinely useful. In
                           setItinerary(null);
                           window.scrollTo({ top: 0, behavior: "smooth" });
                         }}
-                        className="flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-semibold border rounded-xl hover:bg-muted transition-all"
+                        className="flex items-center justify-center gap-2 px-4 py-3.5 text-sm font-semibold border border-white/10 bg-white/5 text-white rounded-2xl hover:bg-white/10 transition-all active:scale-95"
                       >
                         <Pencil className="w-4 h-4" /> Edit
                       </button>
                     </div>
-                    <div className="flex gap-3 pt-2">
+
+                    <div className="flex gap-3">
                       <button
                         onClick={handleShare}
-                        className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-semibold bg-[#25D366] text-white rounded-xl hover:bg-[#20bd5a] transition-all shadow-sm"
+                        className="flex-1 flex items-center justify-center gap-2 px-4 py-4 text-sm font-bold bg-[#25D366] text-white rounded-2xl hover:bg-[#20bd5a] transition-all shadow-lg shadow-[#25D366]/20 active:scale-95"
                       >
-                        <MessageSquare className="w-4 h-4" /> WhatsApp
+                        <MessageSquare className="w-5 h-5" /> WhatsApp
                       </button>
                       <button
                         onClick={handleMail}
-                        className="w-12 h-12 flex items-center justify-center border rounded-xl hover:bg-muted transition-all"
+                        className="w-16 h-16 flex items-center justify-center border border-white/10 bg-white/5 text-white rounded-2xl hover:bg-white/10 transition-all active:scale-95"
                       >
                         <Mail className="w-5 h-5" />
                       </button>
@@ -718,18 +720,18 @@ Include 4-6 activities per day. Make descriptions vivid and genuinely useful. In
                     <button
                       onClick={handleSaveTrip}
                       disabled={isSaving || hasSaved}
-                      className={`w-full flex items-center justify-center gap-2 px-4 py-3 text-sm font-bold rounded-xl transition-all shadow-sm ${
+                      className={`w-full flex items-center justify-center gap-2 px-4 py-4 text-sm font-bold rounded-2xl transition-all shadow-lg active:scale-95 ${
                         hasSaved
-                          ? "bg-emerald-500/10 text-emerald-600 border border-emerald-500/20"
-                          : "bg-gradient-to-r from-[#FF7A59] to-[#FFB36B] text-white hover:shadow-lg"
+                          ? "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30"
+                          : "bg-gradient-to-r from-[#FF7A59] to-[#FFB36B] text-white hover:shadow-[#FF7A59]/40"
                       }`}
                     >
                       {isSaving ? (
-                        <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
+                        <div className="w-5 h-5 border-2 border-current border-t-transparent rounded-full animate-spin" />
                       ) : hasSaved ? (
-                        <Check className="w-4 h-4" />
+                        <Check className="w-5 h-5" />
                       ) : (
-                        <Save className="w-4 h-4" />
+                        <Save className="w-5 h-5" />
                       )}
                       {hasSaved ? "Saved to Profile!" : "Save Itinerary"}
                     </button>
