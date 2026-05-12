@@ -26,7 +26,6 @@ const nav = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { href: "/trips", label: "My Trips", icon: Luggage },
   { href: "/ai-itinerary", label: "Plan New Trip", icon: Sparkles },
-  { href: "/travel-map", label: "Travel Map", icon: Map },
   { href: "/settings/billing", label: "Billing", icon: Settings },
 ] as const
 

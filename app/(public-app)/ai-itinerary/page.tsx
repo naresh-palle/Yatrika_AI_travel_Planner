@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Save, Download, Check, MapPin, CalendarDays, DollarSign, Plane, Sparkles, Heart, Users } from "lucide-react";
+import { Save, Download, Check, MapPin, CalendarDays, DollarSign, Plane, Sparkles, Heart, Users, Utensils, Camera, Car, Star, Home } from "lucide-react";
 import { LocationAutocomplete } from "@/components/ui/location-autocomplete";
 import { useAuth, useClerk } from "@clerk/nextjs";
 
@@ -106,8 +106,16 @@ export default function AiItineraryPage() {
 
       const endParam = params.get("endDate");
       if (endParam) setEndDate(endParam);
+
+      if (startParam && endParam) {
+        const start = new Date(startParam);
+        const end = new Date(endParam);
+        const diffTime = Math.abs(end.getTime() - start.getTime());
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
+        setDays(diffDays.toString());
+      }
       
-      // Travellers can be ignored for AI prompt or injected if needed.
+      const travellersParam = params.get("travellers");
     }
   }, []);
 
@@ -130,7 +138,13 @@ export default function AiItineraryPage() {
   const generateItinerary = async () => {
     if (!destination.trim()) {
       setError("Please enter a destination to get started.");
-      setTimeout(() => setError(""), 3000);
+      setTimeout(() => setError(""), 4000);
+      return;
+    }
+
+    if (!startDate || !endDate) {
+      setError("Please select both a start date and end date to generate your itinerary.");
+      setTimeout(() => setError(""), 4000);
       return;
     }
 
@@ -263,17 +277,32 @@ Include 4-6 activities per day. Make descriptions vivid and genuinely useful. In
 
   const getTagClass = (type: string) => {
     const map: Record<string, string> = {
-      food: "bg-orange-100 text-orange-800", restaurant: "bg-orange-100 text-orange-800", meal: "bg-orange-100 text-orange-800",
-      attraction: "bg-green-100 text-green-800", sightseeing: "bg-green-100 text-green-800",
-      transport: "bg-blue-100 text-blue-800", travel: "bg-blue-100 text-blue-800",
-      hotel: "bg-purple-100 text-purple-800", accommodation: "bg-purple-100 text-purple-800",
-      experience: "bg-amber-100 text-amber-800", activity: "bg-amber-100 text-amber-800"
+      food: "bg-orange-100 text-orange-800 border-orange-200", 
+      restaurant: "bg-orange-100 text-orange-800 border-orange-200", 
+      meal: "bg-orange-100 text-orange-800 border-orange-200",
+      attraction: "bg-green-100 text-green-800 border-green-200", 
+      sightseeing: "bg-green-100 text-green-800 border-green-200",
+      transport: "bg-blue-100 text-blue-800 border-blue-200", 
+      travel: "bg-blue-100 text-blue-800 border-blue-200",
+      hotel: "bg-purple-100 text-purple-800 border-purple-200", 
+      accommodation: "bg-purple-100 text-purple-800 border-purple-200",
+      experience: "bg-amber-100 text-amber-800 border-amber-200", 
+      activity: "bg-amber-100 text-amber-800 border-amber-200"
     };
     const t = (type || "").toLowerCase();
     for (const k in map) {
       if (t.includes(k)) return map[k];
     }
-    return "bg-secondary text-secondary-foreground";
+    return "bg-secondary text-secondary-foreground border-border";
+  };
+
+  const getActivityIcon = (type: string) => {
+    const t = (type || "").toLowerCase();
+    if (t.includes("food") || t.includes("restaurant") || t.includes("meal")) return <Utensils className="w-4 h-4 text-orange-500" />;
+    if (t.includes("attraction") || t.includes("sightseeing")) return <Camera className="w-4 h-4 text-green-500" />;
+    if (t.includes("transport") || t.includes("travel")) return <Car className="w-4 h-4 text-blue-500" />;
+    if (t.includes("hotel") || t.includes("stay") || t.includes("accommodation")) return <Home className="w-4 h-4 text-purple-500" />;
+    return <Star className="w-4 h-4 text-amber-500" />;
   };
 
   return (
@@ -573,17 +602,43 @@ Include 4-6 activities per day. Make descriptions vivid and genuinely useful. In
                 </div>
               </div>
 
-              <div className="text-center mb-16">
+              <div className="text-center mb-10">
                 <span className="text-[11px] tracking-[0.15em] uppercase text-[#38BDF8] font-bold mb-4 block">
                   ✦ {selectedVibes.join(", ") || "Adventure"} · {budget.charAt(0).toUpperCase() + budget.slice(1)} · {days || 5} days {startDate && `· ${startDate}`}{endDate && ` to ${endDate}`}
                 </span>
-                <h2 className="font-serif text-4xl md:text-5xl font-bold mb-4 leading-tight outline-none focus:text-[#38BDF8] transition-colors" contentEditable suppressContentEditableWarning>
+                <h2 className="font-serif text-4xl md:text-5xl font-bold mb-3 leading-tight outline-none focus:text-[#38BDF8] transition-colors" contentEditable suppressContentEditableWarning>
                   {itinerary.destination}
                 </h2>
                 <div className="flex items-center justify-center text-muted-foreground text-sm outline-none focus:text-foreground transition-colors" contentEditable suppressContentEditableWarning>
                   <span>{itinerary.tagline}</span>
                 </div>
               </div>
+
+              {/* Destination Map */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.1 }}
+                className="mb-10 rounded-3xl overflow-hidden border border-border shadow-sm print:hidden"
+              >
+                <div className="bg-muted/40 px-5 py-3 border-b border-border flex items-center gap-2">
+                  <MapPin className="w-4 h-4 text-[#38BDF8]" />
+                  <span className="text-sm font-semibold text-foreground">Explore on Map</span>
+                  <span className="text-xs text-muted-foreground ml-1">— {itinerary.destination}</span>
+                </div>
+                <div className="relative w-full" style={{ height: '320px' }}>
+                  <iframe
+                    title={`Map of ${itinerary.destination}`}
+                    width="100%"
+                    height="320"
+                    style={{ border: 0, display: 'block' }}
+                    loading="lazy"
+                    allowFullScreen
+                    referrerPolicy="no-referrer-when-downgrade"
+                    src={`https://maps.google.com/maps?q=${encodeURIComponent(itinerary.destination)}&output=embed&z=12`}
+                  />
+                </div>
+              </motion.div>
 
               {(itinerary.flights || itinerary.hotel) && (
                 <div className={`grid ${itinerary.flights && itinerary.hotel ? 'md:grid-cols-2' : 'grid-cols-1'} gap-6 mb-12`}>
@@ -645,7 +700,9 @@ Include 4-6 activities per day. Make descriptions vivid and genuinely useful. In
                             <span className="text-xs font-semibold text-muted-foreground outline-none">{act.time}</span>
                           </div>
                           
-                          <div className="absolute left-[88px] top-2.5 w-2 h-2 rounded-full bg-[#38BDF8] shadow-[0_0_0_4px_rgba(56,189,248,0.1)]" />
+                          <div className="absolute left-[88px] top-2.5 w-6 h-6 rounded-full bg-white border border-border shadow-sm flex items-center justify-center z-10 text-[#38BDF8]">
+                            {getActivityIcon(act.type)}
+                          </div>
                           
                           <div className="flex-1 pl-4">
                             <h4 className="font-bold text-foreground text-[16px] mb-1.5 outline-none transition-colors" contentEditable suppressContentEditableWarning>{act.name}</h4>

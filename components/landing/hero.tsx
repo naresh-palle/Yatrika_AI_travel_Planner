@@ -30,20 +30,24 @@ export function Hero() {
 
   return (
     <section className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden pt-24 pb-16">
-      {/* Background gradients */}
+      {/* Tirupati AI-generated background photo */}
       <div className="absolute inset-0 -z-10">
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 2 }}
-          className="absolute top-[-20%] right-[-10%] w-[900px] h-[900px] bg-gradient-to-br from-[#38BDF8]/20 to-transparent rounded-full blur-[120px]"
+          transition={{ duration: 1.5 }}
+          className="absolute inset-0"
+          style={{
+            backgroundImage: "url('/tirupati-bg.png')",
+            backgroundSize: "cover",
+            backgroundPosition: "center 30%",
+            backgroundRepeat: "no-repeat",
+          }}
         />
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 2, delay: 0.5 }}
-          className="absolute bottom-[-20%] left-[-10%] w-[700px] h-[700px] bg-gradient-to-tr from-[#FF7A59]/15 to-transparent rounded-full blur-[100px]"
-        />
+        {/* Dark gradient overlay for readability */}
+        <div className="absolute inset-0 bg-gradient-to-b from-[#0B1F33]/75 via-[#0B1F33]/55 to-[#0B1F33]/80" />
+        {/* Subtle colour accent blobs on top of image */}
+        <div className="absolute top-0 right-0 w-[600px] h-[400px] bg-gradient-to-bl from-[#38BDF8]/15 to-transparent blur-[80px]" />
       </div>
 
       <div className="container mx-auto px-4 md:px-6 relative z-10 flex flex-col items-center">
