@@ -269,7 +269,7 @@ Include 4-6 activities per day. Make descriptions vivid and genuinely useful. In
 
   return (
     <div className="min-h-screen bg-background text-foreground font-sans pb-20">
-      <div className="relative z-10 container mx-auto px-4 pt-10">
+      <div className="relative z-10 container mx-auto px-4 pt-6 max-w-5xl">
         
         <AnimatePresence mode="wait">
           {!itinerary && !isLoading && (

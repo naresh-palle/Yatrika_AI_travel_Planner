@@ -2,88 +2,59 @@
 
 import { motion } from "framer-motion"
 import { Badge } from "@/components/ui/badge"
-import { Star, MapPin, TrendingUp, Wallet } from "lucide-react"
-import Image from "next/image"
+import { MapPin, ArrowRight } from "lucide-react"
+import Link from "next/link"
 
 const destinations = [
   {
-    name: "Bali, Indonesia",
-    tagline: "Island Paradise",
-    rating: 4.9,
-    reviews: "12.4k",
-    price: "From $899",
-    tags: ["Beaches", "Culture", "Adventure"],
-    image: "/images/destinations/bali.jpg",
-    popular: true,
-  },
-  {
-    name: "Paris, France",
-    tagline: "City of Lights",
-    rating: 4.8,
-    reviews: "18.2k",
-    price: "From $1,299",
-    tags: ["Romance", "Art", "Cuisine"],
-    image: "/images/destinations/paris.jpg",
-    popular: false,
-  },
-  {
-    name: "Tokyo, Japan",
+    name: "Tokyo",
     tagline: "Future Meets Tradition",
-    rating: 4.9,
-    reviews: "15.8k",
-    price: "From $1,199",
-    tags: ["Culture", "Food", "Technology"],
-    image: "/images/destinations/tokyo.jpg",
-    popular: true,
+    gradient: "from-rose-500 to-pink-600",
   },
   {
-    name: "Switzerland",
-    tagline: "Alpine Wonderland",
-    rating: 4.8,
-    reviews: "9.3k",
-    price: "From $1,599",
-    tags: ["Mountains", "Nature", "Luxury"],
-    image: "/images/destinations/switzerland.jpg",
-    popular: false,
+    name: "Bali",
+    tagline: "Island Paradise",
+    gradient: "from-emerald-500 to-teal-600",
   },
   {
-    name: "Dubai, UAE",
-    tagline: "City of Gold",
-    rating: 4.7,
-    reviews: "11.1k",
-    price: "From $1,099",
-    tags: ["Luxury", "Shopping", "Desert"],
-    image: "/images/destinations/dubai.jpg",
-    popular: false,
+    name: "Paris",
+    tagline: "City of Lights",
+    gradient: "from-violet-500 to-purple-600",
   },
   {
-    name: "Maldives",
-    tagline: "Tropical Paradise",
-    rating: 4.9,
-    reviews: "8.7k",
-    price: "From $2,299",
-    tags: ["Beaches", "Diving", "Romance"],
-    image: "/images/destinations/maldives.jpg",
-    popular: true,
+    name: "Rajasthan",
+    tagline: "Royal Heritage",
+    gradient: "from-amber-500 to-orange-600",
   },
-]
-
-const indianBudgetExamples = [
-  { trip: "Goa Weekend", budget: "₹12,000", duration: "3 days" },
-  { trip: "Kerala Family Trip", budget: "₹35,000", duration: "5 days" },
-  { trip: "Backpacking Himachal", budget: "₹18,000", duration: "7 days" },
+  {
+    name: "Santorini",
+    tagline: "Aegean Dream",
+    gradient: "from-blue-500 to-cyan-600",
+  },
+  {
+    name: "Kyoto",
+    tagline: "Ancient Beauty",
+    gradient: "from-red-500 to-rose-600",
+  },
+  {
+    name: "Goa",
+    tagline: "Beach & Culture",
+    gradient: "from-sky-500 to-blue-600",
+  },
+  {
+    name: "Marrakech",
+    tagline: "Vibrant Medina",
+    gradient: "from-orange-500 to-red-600",
+  },
 ]
 
 export function Destinations() {
   return (
-    <section id="destinations" className="py-24 md:py-32 relative overflow-hidden section-sand">
-      {/* Background - Warm Sand Beige */}
-      <div className="absolute inset-0 -z-10">
-        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[800px] h-[800px] bg-gradient-to-t from-[#0F4C81]/5 to-transparent rounded-full blur-3xl" />
-      </div>
-
+    <section
+      id="destinations"
+      className="py-24 md:py-32 relative overflow-hidden bg-secondary/30"
+    >
       <div className="container mx-auto px-4 md:px-6">
-        {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -91,135 +62,53 @@ export function Destinations() {
           transition={{ duration: 0.6 }}
           className="text-center max-w-3xl mx-auto mb-16"
         >
-          <Badge 
-            variant="secondary" 
+          <Badge
+            variant="secondary"
             className="mb-4 px-4 py-2 text-sm font-medium bg-[#0F4C81]/10 text-[#0F4C81] border-0"
           >
             <MapPin className="w-4 h-4 mr-2" />
-            Popular Destinations
+            Where travelers are heading
           </Badge>
-          <h2 
-            className="text-3xl md:text-4xl lg:text-5xl font-bold text-[#1E293B] text-balance"
-            style={{ fontFamily: 'var(--font-heading)' }}
+          <h2
+            className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground text-balance"
+            style={{ fontFamily: "var(--font-heading)" }}
           >
-            Discover breathtaking destinations
+            Loved by Yatrika travelers this season
           </h2>
-          <p className="mt-4 text-lg text-[#1E293B]/70 text-pretty">
-            Explore the world&apos;s most stunning locations with AI-curated itineraries.
+          <p className="mt-4 text-lg text-muted-foreground">
+            Start planning for one of these popular destinations.
           </p>
         </motion.div>
 
-        {/* Destinations Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {destinations.map((destination, index) => (
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 max-w-4xl mx-auto">
+          {destinations.map((dest, index) => (
             <motion.div
-              key={destination.name}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
+              key={dest.name}
+              initial={{ opacity: 0, scale: 0.95 }}
+              whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
-              className="group cursor-pointer"
-              onClick={() => window.location.href = '/sign-in'}
+              transition={{ duration: 0.4, delay: index * 0.05 }}
             >
-              <div className="relative h-80 rounded-2xl overflow-hidden bg-card border border-border hover:border-primary/50 transition-all hover:shadow-xl hover:shadow-primary/10 hover:-translate-y-2">
-                {/* Image with zoom effect */}
-                <div className="relative h-full overflow-hidden">
-                  <Image
-                    src={destination.image}
-                    alt={destination.name}
-                    fill
-                    className="object-cover group-hover:scale-110 transition-transform duration-500"
-                  />
-                  
-                  {/* Gradient Overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
-                </div>
-
-                {/* Content */}
-                <div className="absolute inset-0 p-6 flex flex-col justify-between text-white">
-                  {/* Top */}
-                  <div className="flex items-start justify-between">
-                    {destination.popular && (
-                      <Badge className="bg-white/20 text-white border-0 backdrop-blur-sm">
-                        <TrendingUp className="w-3 h-3 mr-1" />
-                        Trending
-                      </Badge>
-                    )}
-                    <div className="flex items-center gap-1 ml-auto bg-white/20 backdrop-blur-sm px-2 py-1 rounded-full">
-                      <Star className="w-4 h-4 fill-white" />
-                      <span className="text-sm font-medium">{destination.rating}</span>
-                    </div>
+              <Link href={`/ai-itinerary?destination=${encodeURIComponent(dest.name)}`}>
+                <div
+                  className={`relative h-36 rounded-2xl bg-gradient-to-br ${dest.gradient} p-5 flex flex-col justify-end cursor-pointer group transition-all hover:-translate-y-1 hover:shadow-xl overflow-hidden`}
+                >
+                  <div className="absolute inset-0 bg-black/10 group-hover:bg-black/20 transition-colors" />
+                  <div className="relative z-10">
+                    <h3
+                      className="text-lg font-bold text-white"
+                      style={{ fontFamily: "var(--font-heading)" }}
+                    >
+                      {dest.name}
+                    </h3>
+                    <p className="text-xs text-white/80">{dest.tagline}</p>
                   </div>
-
-                  {/* Bottom */}
-                  <div>
-                    <h3 className="text-2xl font-bold mb-1">{destination.name}</h3>
-                    <p className="text-white/90 text-sm mb-4">{destination.tagline}</p>
-                    
-                    {/* Tags */}
-                    <div className="flex flex-wrap gap-2 mb-4">
-                      {destination.tags.map((tag) => (
-                        <span
-                          key={tag}
-                          className="text-xs px-2 py-1 bg-white/20 backdrop-blur-sm rounded-full"
-                        >
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
-
-                    {/* Price & Reviews */}
-                    <div className="flex items-center justify-between pt-4 border-t border-white/20">
-                      <div>
-                        <p className="text-lg font-bold">{destination.price}</p>
-                        <p className="text-xs text-white/70">per person</p>
-                      </div>
-                      <p className="text-sm text-white/80">{destination.reviews} reviews</p>
-                    </div>
-                  </div>
+                  <ArrowRight className="absolute top-4 right-4 w-4 h-4 text-white/50 group-hover:text-white group-hover:translate-x-1 transition-all z-10" />
                 </div>
-              </div>
+              </Link>
             </motion.div>
           ))}
         </div>
-
-        {/* Indian Budget Examples */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.3 }}
-          className="mt-16 glass rounded-2xl p-6 md:p-8"
-        >
-          <div className="flex items-center gap-3 mb-6">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#FF7A59]/20 to-[#0F4C81]/20 flex items-center justify-center">
-              <Wallet className="w-5 h-5 text-[#FF7A59]" />
-            </div>
-            <div>
-              <h3 className="font-semibold text-foreground">Budget-Friendly India Trips</h3>
-              <p className="text-sm text-muted-foreground">Estimated budgets for popular Indian destinations</p>
-            </div>
-          </div>
-          <div className="grid sm:grid-cols-3 gap-4">
-            {indianBudgetExamples.map((example, index) => (
-              <motion.div
-                key={example.trip}
-                initial={{ opacity: 0, scale: 0.95 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.3, delay: index * 0.1 }}
-                className="bg-secondary/50 rounded-xl p-4 hover:bg-secondary transition-colors cursor-pointer"
-                onClick={() => window.location.href = '/sign-in'}
-              >
-                <p className="font-medium text-foreground">{example.trip}</p>
-                <div className="flex items-center justify-between mt-2">
-                  <span className="text-lg font-bold text-[#0F4C81]">{example.budget}</span>
-                  <span className="text-xs text-muted-foreground">{example.duration}</span>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </motion.div>
       </div>
     </section>
   )
