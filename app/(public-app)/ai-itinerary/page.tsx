@@ -33,6 +33,8 @@ type DayPlan = {
 
 type Itinerary = {
   destination: string;
+  tripTitle: string;
+  category: string;
   tagline: string;
   flights: {
     outbound: string;
@@ -192,6 +194,8 @@ Duration: ${days || 5} days
 Respond with ONLY valid JSON in this exact format, no markdown, no explanation:
 {
   "destination": "Full destination name",
+  "tripTitle": "A catchy, creative title for the trip (e.g. Goa's Opulent Shores & Heritage Trails)",
+  "category": "Trip category (e.g. CITY BREAK, ADVENTURE, RELAXATION)",
   "tagline": "One evocative sentence about this destination",
   "flights": {
     "outbound": "Suggested outbound flight details (e.g. Non-stop, 4h 30m)",
@@ -222,7 +226,7 @@ Respond with ONLY valid JSON in this exact format, no markdown, no explanation:
   "tips": ["tip 1", "tip 2", "tip 3", "tip 4"]
 }
 
-Include 4-6 activities per day. Make descriptions vivid and genuinely useful. Include local food recommendations. Budget should be realistic for ${budget} traveler. For each activity, provide accurate latitude and longitude coordinates.`;
+Include 4-6 activities per day. Make descriptions vivid and genuinely useful. Include local food recommendations. Budget should be realistic for ${budget} traveler. For each activity, provide accurate latitude and longitude coordinates. CRITICAL: Do NOT return null for coordinates. If you don't know the exact ones, provide highly plausible coordinates for the location in ${destination}.`;
 
     try {
       const response = await fetch("/api/generate-itinerary", {
@@ -734,6 +738,36 @@ Include 4-6 activities per day. Make descriptions vivid and genuinely useful. In
 
                 {/* Right Column: Itinerary Details */}
                 <div className="flex-1 w-full space-y-8">
+                  {/* Cinematic Header from Screenshot */}
+                  <div className="relative pt-20 pb-12 px-8 md:px-12 bg-gradient-to-br from-[#7c3a2a] via-[#5c2a1c] to-background rounded-[40px] overflow-hidden shadow-2xl border border-white/10 mb-2">
+                    <div className="absolute top-8 right-8 flex items-center gap-3 print:hidden">
+                      <button className="w-10 h-10 rounded-full bg-white/90 backdrop-blur-md flex items-center justify-center text-gray-800 shadow-lg hover:bg-white transition-all active:scale-95 group">
+                        <Heart className="w-4 h-4 group-hover:fill-red-500 group-hover:text-red-500 transition-all" />
+                      </button>
+                      <button onClick={handleShare} className="w-10 h-10 rounded-full bg-white/90 backdrop-blur-md flex items-center justify-center text-gray-800 shadow-lg hover:bg-white transition-all active:scale-95">
+                        <Share2 className="w-4 h-4" />
+                      </button>
+                      <button onClick={handleMail} className="w-10 h-10 rounded-full bg-white/90 backdrop-blur-md flex items-center justify-center text-gray-800 shadow-lg hover:bg-white transition-all active:scale-95">
+                        <Mail className="w-4 h-4" />
+                      </button>
+                      <button onClick={handleDownloadPdf} className="w-10 h-10 rounded-full bg-white/90 backdrop-blur-md flex items-center justify-center text-gray-800 shadow-lg hover:bg-white transition-all active:scale-95">
+                        <Download className="w-4 h-4" />
+                      </button>
+                    </div>
+                    
+                    <div className="relative z-10">
+                      <span className="text-[11px] tracking-[0.3em] uppercase text-white/60 font-bold mb-4 block">
+                        {itinerary.category || "Trip Plan"} • {days || 5} days
+                      </span>
+                      <h2 className="font-serif text-4xl md:text-6xl font-bold text-white mb-3 leading-[1.1] tracking-tight">
+                        {itinerary.tripTitle || itinerary.destination}
+                      </h2>
+                      <div className="flex items-center gap-2 text-white/80 text-lg md:text-xl font-medium">
+                        <MapPin className="w-5 h-5 text-[#FFB36B]" />
+                        {itinerary.destination}
+                      </div>
+                    </div>
+                  </div>
                   {/* Summary Cards */}
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div className="bg-card border rounded-2xl p-5 shadow-sm">

@@ -44,7 +44,18 @@ function MapBoundsFitter({ activities }: { activities: { lat: number; lng: numbe
   return null;
 }
 
+function MapUpdater({ center, zoom }: { center: [number, number]; zoom: number }) {
+  const map = useMap();
+  useEffect(() => {
+    map.setView(center, zoom, { animate: true });
+  }, [center, zoom, map]);
+  return null;
+}
+
 export default function ItineraryMap({ days, destination }: ItineraryMapProps) {
+  const [mapCenter, setMapCenter] = React.useState<[number, number]>([20.5937, 78.9629]);
+  const [mapZoom, setMapZoom] = React.useState(13);
+
   const allActivities = useMemo(() => {
     return days.flatMap(day => 
       day.activities
@@ -57,9 +68,24 @@ export default function ItineraryMap({ days, destination }: ItineraryMapProps) {
     );
   }, [days]);
 
-  const center: [number, number] = allActivities.length > 0 
-    ? [allActivities[0].coordinates.lat, allActivities[0].coordinates.lng]
-    : [20.5937, 78.9629]; // India center fallback
+  useEffect(() => {
+    if (allActivities.length > 0) {
+      setMapCenter([allActivities[0].coordinates.lat, allActivities[0].coordinates.lng]);
+    } else if (destination) {
+      // Fallback geocoding if AI didn't provide coordinates
+      fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(destination)}&limit=1`)
+        .then(res => res.json())
+        .then(data => {
+          if (data && data.length > 0) {
+            const lat = parseFloat(data[0].lat);
+            const lon = parseFloat(data[0].lon);
+            setMapCenter([lat, lon]);
+            setMapZoom(11);
+          }
+        })
+        .catch(err => console.error("Geocoding error:", err));
+    }
+  }, [allActivities, destination]);
 
   // Create custom icons for each day
   const getDayIcon = (day: number) => {
@@ -67,17 +93,17 @@ export default function ItineraryMap({ days, destination }: ItineraryMapProps) {
     
     return L.divIcon({
       className: 'custom-div-icon',
-      html: `<div style="background-color: #FF7A59; color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; items-center; justify-content: center; font-size: 10px; font-weight: bold; border: 2px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.3);">${day}</div>`,
+      html: `<div style="background-color: #FF7A59; color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: bold; border: 2px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.3);">${day}</div>`,
       iconSize: [24, 24],
       iconAnchor: [12, 12]
     });
   };
 
   return (
-    <div className="w-full h-full relative min-h-[400px] rounded-3xl overflow-hidden border shadow-sm">
+    <div className="w-full h-full relative min-h-[450px] rounded-[32px] overflow-hidden border shadow-xl">
       <MapContainer
-        center={center}
-        zoom={13}
+        center={mapCenter}
+        zoom={mapZoom}
         className="w-full h-full z-0"
         scrollWheelZoom={false}
       >
@@ -87,7 +113,11 @@ export default function ItineraryMap({ days, destination }: ItineraryMapProps) {
           className="map-tiles-dark"
         />
         
-        <MapBoundsFitter activities={allActivities.map(a => a.coordinates)} />
+        {allActivities.length > 0 ? (
+          <MapBoundsFitter activities={allActivities.map(a => a.coordinates)} />
+        ) : (
+          <MapUpdater center={mapCenter} zoom={mapZoom} />
+        )}
 
         {allActivities.map((act, i) => (
           <Marker 

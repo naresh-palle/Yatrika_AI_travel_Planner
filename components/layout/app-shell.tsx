@@ -80,13 +80,33 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             )
           })}
           
-          {/* Extra Memento Icons */}
-          <div className="p-2.5 text-white/20 cursor-not-allowed">
+          <Link
+            href="/ai-itinerary"
+            className={cn(
+              "p-2.5 rounded-xl transition-all duration-300 group relative",
+              "text-white/40 hover:text-white hover:bg-white/5"
+            )}
+          >
             <MessageSquare className="w-5 h-5" />
-          </div>
-          <div className="p-2.5 text-white/20 cursor-not-allowed">
+            <div className="absolute left-full ml-4 px-3 py-1.5 bg-black/90 text-white text-[10px] uppercase tracking-widest font-bold rounded-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none border border-white/10 shadow-xl whitespace-nowrap z-50">
+              Chat Support
+            </div>
+          </Link>
+
+          <Link
+            href="/travel-map"
+            className={cn(
+              "p-2.5 rounded-xl transition-all duration-300 group relative",
+              pathname === "/travel-map" 
+                ? "bg-gradient-to-br from-[#FFB36B] to-[#FF7A59] text-white shadow-lg shadow-[#FF7A59]/40 scale-110" 
+                : "text-white/40 hover:text-white hover:bg-white/5"
+            )}
+          >
             <Compass className="w-5 h-5" />
-          </div>
+            <div className="absolute left-full ml-4 px-3 py-1.5 bg-black/90 text-white text-[10px] uppercase tracking-widest font-bold rounded-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none border border-white/10 shadow-xl whitespace-nowrap z-50">
+              Explore Map
+            </div>
+          </Link>
         </nav>
 
         {/* Bottom Icons */}
