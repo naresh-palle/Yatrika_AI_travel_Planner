@@ -5,12 +5,23 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Save, Download, Check, MapPin, CalendarDays, DollarSign, Plane, Sparkles, Heart, Users, Utensils, Camera, Car, Star, Home, Share2, Mail, Pencil, MessageSquare, ExternalLink, ChevronRight, X } from "lucide-react";
 import { LocationAutocomplete } from "@/components/ui/location-autocomplete";
 import { useAuth, useClerk } from "@clerk/nextjs";
+import dynamic from "next/dynamic";
+
+const ItineraryMap = dynamic(() => import("@/components/map/ItineraryMap"), {
+  ssr: false,
+  loading: () => (
+    <div className="w-full h-[400px] bg-muted animate-pulse rounded-3xl flex items-center justify-center text-muted-foreground">
+      Loading map engine...
+    </div>
+  ),
+});
 
 type Activity = {
   time: string;
   name: string;
   description: string;
   type: string;
+  coordinates?: { lat: number; lng: number };
 };
 
 type DayPlan = {
@@ -202,7 +213,8 @@ Respond with ONLY valid JSON in this exact format, no markdown, no explanation:
           "time": "09:00 AM",
           "name": "Activity name",
           "description": "2 sentence engaging description with practical details",
-          "type": "attraction|food|transport|experience|stay"
+          "type": "attraction|food|transport|experience|stay",
+          "coordinates": { "lat": number, "lng": number }
         }
       ]
     }
@@ -210,7 +222,7 @@ Respond with ONLY valid JSON in this exact format, no markdown, no explanation:
   "tips": ["tip 1", "tip 2", "tip 3", "tip 4"]
 }
 
-Include 4-6 activities per day. Make descriptions vivid and genuinely useful. Include local food recommendations. Budget should be realistic for ${budget} traveler.`;
+Include 4-6 activities per day. Make descriptions vivid and genuinely useful. Include local food recommendations. Budget should be realistic for ${budget} traveler. For each activity, provide accurate latitude and longitude coordinates.`;
 
     try {
       const response = await fetch("/api/generate-itinerary", {
@@ -777,19 +789,11 @@ Include 4-6 activities per day. Make descriptions vivid and genuinely useful. In
                   </div>
 
                   {/* Map */}
-                  <div className="rounded-3xl overflow-hidden border shadow-sm print:hidden">
-                    <div className="relative w-full h-[400px]">
-                      <iframe
-                        title={`Map of ${itinerary.destination}`}
-                        width="100%"
-                        height="400"
-                        style={{ border: 0 }}
-                        loading="lazy"
-                        allowFullScreen
-                        referrerPolicy="no-referrer-when-downgrade"
-                        src={`https://maps.google.com/maps?q=${encodeURIComponent(itinerary.destination)}&output=embed&z=12`}
-                      />
-                    </div>
+                  <div className="print:hidden">
+                    <ItineraryMap 
+                      days={itinerary.days} 
+                      destination={itinerary.destination} 
+                    />
                   </div>
 
                   {/* Itinerary Days */}
