@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from 'next'
-import { Inter, Poppins, Geist_Mono } from 'next/font/google'
+import { Inter, Poppins, Geist_Mono, Playfair_Display } from 'next/font/google'
 
 import { ClerkProvider } from "@clerk/nextjs"
 import '@fontsource/poppins/400.css'
