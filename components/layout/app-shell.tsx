@@ -4,7 +4,6 @@ import { useState } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import {
-  Compass,
   LayoutDashboard,
   Luggage,
   Map,
@@ -25,12 +24,10 @@ import { cn } from "@/lib/utils"
 
 const nav = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
-  { href: "/trips", label: "Trips", icon: Luggage },
-  { href: "/ai-itinerary", label: "AI Itinerary", icon: Sparkles },
+  { href: "/trips", label: "My Trips", icon: Luggage },
+  { href: "/ai-itinerary", label: "Plan New Trip", icon: Sparkles },
   { href: "/travel-map", label: "Travel Map", icon: Map },
   { href: "/settings/billing", label: "Billing", icon: Settings },
-  { href: "/admin", label: "Admin", icon: Settings },
-  { href: "/", label: "Explore", icon: Compass },
 ] as const
 
 function SidebarNav({ collapsed = false }: { collapsed?: boolean }) {

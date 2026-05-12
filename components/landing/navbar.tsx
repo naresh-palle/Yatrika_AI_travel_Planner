@@ -10,10 +10,8 @@ import { cn } from "@/lib/utils"
 import { useAuth, useClerk } from "@clerk/nextjs"
 
 const navLinks = [
-  { href: "#features", label: "Features" },
+  { href: "#how-it-works", label: "How It Works" },
   { href: "#destinations", label: "Destinations" },
-  { href: "#explore-india", label: "Explore India" },
-  { href: "#seasonal", label: "Seasonal Trips" },
   { href: "#pricing", label: "Pricing" },
 ]
 

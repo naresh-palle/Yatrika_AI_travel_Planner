@@ -1,18 +1,7 @@
 import { Navbar } from "@/components/landing/navbar"
 import { Hero } from "@/components/landing/hero"
-import { TrustBadges } from "@/components/landing/trust-badges"
-import { Features } from "@/components/landing/features"
-import { ItineraryShowcase } from "@/components/landing/itinerary-showcase"
-import { Destinations } from "@/components/landing/destinations"
-import { IndiaDestinations } from "@/components/landing/india-destinations"
-import { SeasonalDestinations } from "@/components/landing/seasonal-destinations"
-import { FestivalTravel } from "@/components/landing/festival-travel"
 import { HowItWorks } from "@/components/landing/how-it-works"
-import { TripTypes } from "@/components/landing/trip-types"
-import { SmartPlanning } from "@/components/landing/smart-planning"
-import { LocalDiscovery } from "@/components/landing/local-discovery"
-import { MapExperience } from "@/components/landing/map-experience"
-import { AIFeatures } from "@/components/landing/ai-features"
+import { Destinations } from "@/components/landing/destinations"
 import { Testimonials } from "@/components/landing/testimonials"
 import { Pricing } from "@/components/landing/pricing"
 import { FAQ } from "@/components/landing/faq"
@@ -25,34 +14,16 @@ export default function Home() {
       {/* Animated Floating Gradient Blobs */}
       <div className="floating-blob-1" aria-hidden="true" />
       <div className="floating-blob-2" aria-hidden="true" />
-      
+
       {/* Content */}
       <div className="relative z-10">
         <Navbar />
-        
-        {/* Main Page (Top) - Hero and TripTypes */}
         <Hero />
-        <TripTypes />
-        <TrustBadges />
-        
-        {/* Middle Sections */}
-        <Destinations />
-        <IndiaDestinations />
-        <LocalDiscovery />
-        <SeasonalDestinations />
-        <FestivalTravel />
         <HowItWorks />
-        <AIFeatures />
+        <Destinations />
         <Testimonials />
         <Pricing />
         <FAQ />
-        
-        {/* Moved Attachments to Bottom */}
-        <MapExperience />
-        <ItineraryShowcase />
-        <SmartPlanning />
-        <Features />
-        
         <CTA />
         <Footer />
       </div>

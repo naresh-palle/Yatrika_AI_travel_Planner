@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Save, Download, Check } from "lucide-react";
+import { Save, Download, Check, MapPin, CalendarDays, DollarSign, Plane, Sparkles, Heart, Users } from "lucide-react";
 import { LocationAutocomplete } from "@/components/ui/location-autocomplete";
 import { useAuth, useClerk } from "@clerk/nextjs";
 
@@ -96,9 +96,18 @@ export default function AiItineraryPage() {
     if (typeof window !== "undefined") {
       const params = new URLSearchParams(window.location.search);
       const destParam = params.get("destination");
-      if (destParam) {
-        setDestination(destParam);
-      }
+      if (destParam) setDestination(destParam);
+      
+      const originParam = params.get("origin");
+      if (originParam) setOrigin(originParam);
+
+      const startParam = params.get("startDate");
+      if (startParam) setStartDate(startParam);
+
+      const endParam = params.get("endDate");
+      if (endParam) setEndDate(endParam);
+      
+      // Travellers can be ignored for AI prompt or injected if needed.
     }
   }, []);
 
@@ -281,27 +290,44 @@ Include 4-6 activities per day. Make descriptions vivid and genuinely useful. In
               className="flex flex-col items-center justify-center min-h-[80vh] py-12"
             >
               <div className="text-center max-w-3xl mb-12">
-                <h1 className="text-5xl md:text-7xl font-bold mb-6 tracking-tight">
+                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#38BDF8]/10 border border-[#38BDF8]/20 text-[#38BDF8] text-sm font-semibold mb-6">
+                  <Sparkles className="w-4 h-4" />
+                  AI Travel Planner
+                </div>
+                <h1 className="text-4xl md:text-6xl font-bold mb-5 tracking-tight">
                   Plan your dream trip<br />
                   <span className="text-[#38BDF8] italic font-serif">in seconds</span>
                 </h1>
-                <p className="text-lg text-muted-foreground max-w-xl mx-auto leading-relaxed">
-                  Describe where you want to go. Our AI crafts a complete, day-by-day itinerary — tailored to your vibe, duration, and budget.
+                <p className="text-base text-muted-foreground max-w-lg mx-auto leading-relaxed">
+                  Enter your destination and preferences. Our AI generates a complete, personalized day-by-day itinerary — flights, hotels, activities, and budget included.
                 </p>
               </div>
 
-              <div className="w-full max-w-3xl bg-card text-card-foreground border rounded-3xl p-6 md:p-10 shadow-sm">
-                <div className="text-xs font-semibold tracking-[0.1em] uppercase text-[#38BDF8] mb-6">
-                  ✦ Create your itinerary
+              <div className="w-full max-w-3xl bg-card text-card-foreground border rounded-3xl shadow-sm overflow-hidden">
+                {/* Form header */}
+                <div className="bg-gradient-to-r from-[#0F4C81]/5 to-[#38BDF8]/5 border-b border-border/50 px-6 md:px-10 py-4 flex items-center justify-between">
+                  <div className="flex items-center gap-2 text-sm font-semibold text-foreground">
+                    <Sparkles className="w-4 h-4 text-[#38BDF8]" />
+                    Create your itinerary
+                  </div>
+                  <label className="text-[12px] flex items-center gap-1.5 cursor-pointer text-muted-foreground font-medium hover:text-foreground transition-colors">
+                    <input type="checkbox" checked={requireFlights} onChange={e => setRequireFlights(e.target.checked)} className="w-3.5 h-3.5 accent-[#38BDF8]" />
+                    <Plane className="w-3 h-3" />
+                    Include Flights
+                  </label>
+                </div>
+
+                <div className="p-6 md:p-10">
+
+                {/* Section: Destination */}
+                <div className="mb-2">
+                  <div className="flex items-center gap-1.5 text-[11px] uppercase tracking-wider font-bold text-[#38BDF8] mb-3">
+                    <MapPin className="w-3.5 h-3.5" /> Destination
+                  </div>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-12 gap-4 mb-6">
-                  <div className="md:col-span-12 flex items-center justify-end mb-1">
-                    <label className="text-[12px] flex items-center gap-1.5 cursor-pointer text-muted-foreground font-medium hover:text-foreground transition-colors">
-                      <input type="checkbox" checked={requireFlights} onChange={e => setRequireFlights(e.target.checked)} className="w-3.5 h-3.5 accent-[#38BDF8]" />
-                      Include Flights
-                    </label>
-                  </div>
+                  <div className="md:col-span-12 hidden">{/* spacer */}</div>
                   
                   {requireFlights && (
                     <>
@@ -399,10 +425,18 @@ Include 4-6 activities per day. Make descriptions vivid and genuinely useful. In
                       <option value="Villa">Villa / Airbnb</option>
                     </select>
                   </div>
+                  </div>
+
+                {/* Section divider */}
+                <div className="border-t border-border/40 my-6" />
+
+                {/* Section: Special Requests */}
+                <div className="flex items-center gap-1.5 text-[11px] uppercase tracking-wider font-bold text-[#38BDF8] mb-3">
+                  <Heart className="w-3.5 h-3.5" /> Special Requests (Optional)
                 </div>
 
                 <div className="mb-6 flex flex-col gap-1.5">
-                  <label className="text-[11px] uppercase tracking-wider text-[#38BDF8] font-bold">✦ AI Keywords / Special Requests (Optional)</label>
+                  <label className="text-[11px] uppercase tracking-wider text-muted-foreground font-medium">Keywords or custom requirements</label>
                   <textarea
                     className="flex w-full rounded-xl border border-input bg-background px-3 py-3 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 resize-none h-20"
                     placeholder="e.g. Include wheelchair accessible places, vegan restaurants only, prefer walking tours, need a layover in Dubai..."
@@ -411,8 +445,16 @@ Include 4-6 activities per day. Make descriptions vivid and genuinely useful. In
                   />
                 </div>
 
+                {/* Section divider */}
+                <div className="border-t border-border/40 my-6" />
+
+                {/* Section: Travel Vibe */}
+                <div className="flex items-center gap-1.5 text-[11px] uppercase tracking-wider font-bold text-[#38BDF8] mb-3">
+                  <Users className="w-3.5 h-3.5" /> Travel Vibe
+                </div>
+
                 <div className="mb-8">
-                  <div className="text-xs font-medium tracking-[0.1em] uppercase text-[#38BDF8] mb-4">Travel vibe</div>
+                  <div className="text-xs text-muted-foreground mb-4">Select all that apply</div>
                   <div className="flex flex-wrap gap-2">
                     {VIBES.map((vibe) => (
                       <button
@@ -430,21 +472,26 @@ Include 4-6 activities per day. Make descriptions vivid and genuinely useful. In
                   </div>
                 </div>
 
-                <button
-                  onClick={generateItinerary}
-                  disabled={isLoading}
-                  className="w-full bg-gradient-to-r from-[#FF7A59] to-[#FFB36B] hover:shadow-lg hover:shadow-[#FF7A59]/20 text-white font-bold rounded-xl py-4 flex items-center justify-center gap-2 transition-all active:scale-[0.98] border-0"
-                >
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
-                  Generate My Itinerary
-                </button>
+                {/* Generate CTA */}
+                <div className="border-t border-border/40 mt-6 pt-6">
+                  <button
+                    onClick={generateItinerary}
+                    disabled={isLoading}
+                    className="w-full bg-gradient-to-r from-[#FF7A59] to-[#FFB36B] hover:from-[#ff6b47] hover:to-[#ffa855] hover:shadow-xl hover:shadow-[#FF7A59]/20 text-white font-bold rounded-xl py-4 text-base flex items-center justify-center gap-2.5 transition-all active:scale-[0.98] border-0"
+                  >
+                    <Sparkles className="w-5 h-5" />
+                    Generate My Itinerary
+                  </button>
 
-                {error && (
-                  <div className="mt-4 bg-destructive/10 border border-destructive text-destructive text-sm rounded-lg p-3 text-center">
-                    {error}
-                  </div>
-                )}
-              </div>
+                  {error && (
+                    <div className="mt-4 bg-destructive/10 border border-destructive text-destructive text-sm rounded-lg p-3 text-center">
+                      {error}
+                    </div>
+                  )}
+                </div>
+
+                </div>{/* end inner padding */}
+              </div>{/* end card */}
             </motion.div>
           )}
 
@@ -474,53 +521,55 @@ Include 4-6 activities per day. Make descriptions vivid and genuinely useful. In
               animate={{ opacity: 1, y: 0 }}
               className="py-12 max-w-4xl mx-auto print:py-0 print:max-w-none print:bg-white print:text-black print:absolute print:inset-0 print:z-50"
             >
-              {/* Action Buttons */}
-              <div className="flex justify-between items-center mb-8 print:hidden">
-                <button
-                  onClick={() => {
-                    setItinerary(null);
-                    window.scrollTo({ top: 0, behavior: "smooth" });
-                  }}
-                  className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground border rounded-lg hover:bg-muted transition-all"
-                >
-                  ← Back to Planner
-                </button>
-                <div className="flex gap-3">
+              {/* Sticky Action Bar */}
+              <div className="sticky top-0 z-20 -mx-4 px-4 py-3 mb-8 bg-background/90 backdrop-blur-md border-b border-border/50 print:hidden">
+                <div className="flex justify-between items-center max-w-4xl mx-auto">
                   <button
-                    onClick={handleDownloadPdf}
-                    className="flex items-center gap-2 px-4 py-2 text-sm font-medium bg-secondary text-secondary-foreground hover:bg-secondary/80 rounded-lg transition-colors border border-border"
+                    onClick={() => {
+                      setItinerary(null);
+                      window.scrollTo({ top: 0, behavior: "smooth" });
+                    }}
+                    className="flex items-center gap-1.5 px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground border rounded-lg hover:bg-muted transition-all"
                   >
-                    <Download className="w-4 h-4" />
-                    Save PDF
+                    ← Back
                   </button>
-                  <button
-                    onClick={handleSaveTrip}
-                    disabled={isSaving || hasSaved}
-                    className={`flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg transition-colors shadow-sm ${
-                      hasSaved 
-                        ? "bg-emerald-500/10 text-emerald-500 border border-emerald-500/20" 
-                        : "bg-[#38BDF8] text-[#0B1F33] hover:bg-[#38BDF8]/90"
-                    }`}
-                  >
-                  {isSaving ? (
-                    <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
-                  ) : hasSaved ? (
-                    <Check className="w-4 h-4" />
-                  ) : (
-                    <Save className="w-4 h-4" />
-                  )}
-                  {hasSaved ? "Saved!" : "Save Trip"}
-                </button>
-                {hasSaved && savedTripId && (
-                  <a
-                    href={`/trips/${savedTripId}`}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="flex items-center gap-2 px-4 py-2 text-sm font-medium bg-[#FF7A59] text-white hover:bg-[#FF7A59]/90 rounded-lg transition-colors shadow-sm"
-                  >
-                    View Saved Trip ↗
-                  </a>
-                )}
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={handleDownloadPdf}
+                      className="flex items-center gap-1.5 px-3 py-2 text-sm font-medium bg-secondary text-secondary-foreground hover:bg-secondary/80 rounded-lg transition-colors border border-border"
+                    >
+                      <Download className="w-3.5 h-3.5" />
+                      PDF
+                    </button>
+                    <button
+                      onClick={handleSaveTrip}
+                      disabled={isSaving || hasSaved}
+                      className={`flex items-center gap-1.5 px-4 py-2 text-sm font-semibold rounded-lg transition-colors shadow-sm ${
+                        hasSaved
+                          ? "bg-emerald-500/10 text-emerald-600 border border-emerald-500/20"
+                          : "bg-[#38BDF8] text-[#0B1F33] hover:bg-[#2baee0]"
+                      }`}
+                    >
+                      {isSaving ? (
+                        <div className="w-3.5 h-3.5 border-2 border-current border-t-transparent rounded-full animate-spin" />
+                      ) : hasSaved ? (
+                        <Check className="w-3.5 h-3.5" />
+                      ) : (
+                        <Save className="w-3.5 h-3.5" />
+                      )}
+                      {hasSaved ? "Saved!" : "Save Trip"}
+                    </button>
+                    {hasSaved && savedTripId && (
+                      <a
+                        href={`/trips/${savedTripId}`}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="flex items-center gap-1.5 px-4 py-2 text-sm font-semibold bg-gradient-to-r from-[#FF7A59] to-[#FFB36B] text-white hover:shadow-md rounded-lg transition-all"
+                      >
+                        View Trip ↗
+                      </a>
+                    )}
+                  </div>
                 </div>
               </div>
 

@@ -17,40 +17,17 @@ const footerLinks = {
   product: {
     title: "Product",
     links: [
-      { label: "Features", href: "#features" },
-      { label: "Pricing", href: "#pricing" },
+      { label: "How It Works", href: "#how-it-works" },
       { label: "Destinations", href: "#destinations" },
-      { label: "Mobile App", href: "#" },
-      { label: "Integrations", href: "#" },
-    ],
-  },
-  company: {
-    title: "Company",
-    links: [
-      { label: "About Us", href: "#" },
-      { label: "Careers", href: "#" },
-      { label: "Press Kit", href: "#" },
-      { label: "Blog", href: "#" },
-      { label: "Contact", href: "#" },
-    ],
-  },
-  resources: {
-    title: "Resources",
-    links: [
-      { label: "Help Center", href: "#" },
-      { label: "Travel Guides", href: "#" },
-      { label: "Community", href: "#" },
-      { label: "API Documentation", href: "#" },
-      { label: "Status", href: "#" },
+      { label: "Pricing", href: "#pricing" },
+      { label: "Plan a Trip", href: "/ai-itinerary" },
     ],
   },
   legal: {
     title: "Legal",
     links: [
-      { label: "Privacy Policy", href: "#" },
-      { label: "Terms of Service", href: "#" },
-      { label: "Cookie Policy", href: "#" },
-      { label: "GDPR", href: "#" },
+      { label: "Privacy Policy", href: "/privacy" },
+      { label: "Terms of Service", href: "/terms" },
     ],
   },
 }
