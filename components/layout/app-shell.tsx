@@ -91,7 +91,6 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           </Link>
           <div className="relative group">
             <UserButton 
-              afterSignOutUrl="/" 
               appearance={{
                 elements: {
                   userButtonAvatarBox: "w-8 h-8 border border-white/20"
