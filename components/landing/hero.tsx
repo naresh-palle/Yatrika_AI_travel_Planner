@@ -63,7 +63,7 @@ export function Hero() {
           className="max-w-3xl mb-8"
         >
           <h1 className="text-5xl md:text-7xl lg:text-8xl font-medium text-white leading-[1.1] tracking-tight">
-            Plan trips you'll <br />
+            Plan trips you&apos;ll <br />
             actually <span className="font-serif italic text-[#FFB36B]">remember.</span>
           </h1>
         </motion.div>
@@ -75,7 +75,7 @@ export function Hero() {
           transition={{ duration: 0.8, delay: 0.2 }}
           className="text-white/80 text-lg md:text-xl mb-12 max-w-xl leading-relaxed font-light"
         >
-          Tell Yatrika where you're dreaming of going. We'll handcraft a day-by-day itinerary that feels like it was written by a friend who lives there.
+          Tell Yatrika where you&apos;re dreaming of going. We&apos;ll handcraft a day-by-day itinerary that feels like it was written by a friend who lives there.
         </motion.p>
 
         {/* Buttons */}
