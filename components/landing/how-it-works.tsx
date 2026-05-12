@@ -36,7 +36,7 @@ const steps = [
 
 export function HowItWorks() {
   return (
-    <section id="how-it-works" className="py-24 md:py-32 bg-secondary/30 relative overflow-hidden">
+    <section id="how-it-works" className="py-24 md:py-32 bg-transparent relative overflow-hidden">
       {/* Background Elements */}
       <div className="absolute inset-0 -z-10">
         <div className="absolute top-1/2 left-0 w-[500px] h-[500px] bg-gradient-to-r from-primary/10 to-transparent rounded-full blur-3xl" />

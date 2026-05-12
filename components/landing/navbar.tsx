@@ -90,14 +90,14 @@ export function Navbar() {
                   <Button
                     variant="ghost"
                     size="sm"
-                    className="text-white/80 hover:text-white hover:bg-transparent font-medium text-sm"
+                    className="text-white hover:text-[#FFB36B] hover:bg-white/5 font-medium text-sm transition-all"
                     onClick={() => router.push("/sign-in")}
                   >
                     Sign in
                   </Button>
                   <Button
                     size="sm"
-                    className="h-10 px-6 rounded-full bg-white text-[#0B1F33] hover:bg-white/90 font-bold shadow-lg transition-all"
+                    className="h-10 px-6 rounded-full bg-gradient-to-r from-[#FFB36B] to-[#FF7A59] hover:from-[#FFA855] hover:to-[#FF6B47] text-white font-bold shadow-lg shadow-[#FF7A59]/25 transition-all"
                     onClick={() => router.push("/sign-up")}
                   >
                     Create account
@@ -115,7 +115,7 @@ export function Navbar() {
                   </Button>
                   <Button
                     size="sm"
-                    className="h-10 px-6 rounded-full bg-white text-[#0B1F33] hover:bg-white/90 font-bold shadow-lg transition-all"
+                    className="h-10 px-6 rounded-full bg-gradient-to-r from-[#FFB36B] to-[#FF7A59] hover:from-[#FFA855] hover:to-[#FF6B47] text-white font-bold shadow-lg shadow-[#FF7A59]/25 transition-all"
                     onClick={() => router.push("/dashboard")}
                   >
                     Dashboard

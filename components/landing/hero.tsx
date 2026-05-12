@@ -21,7 +21,7 @@ export function Hero() {
           <span className="text-white font-bold text-xs">Y</span>
         </div>
         <div className="flex flex-col gap-8">
-          <div className="p-2 rounded-xl bg-[#FF7A59] text-white shadow-lg shadow-[#FF7A59]/30">
+          <div className="p-2 rounded-xl bg-gradient-to-br from-[#FFB36B] to-[#FF7A59] text-white shadow-lg shadow-[#FF7A59]/30">
             <MapPin className="w-5 h-5" />
           </div>
           <div className="p-2 text-white/40 hover:text-white transition-colors cursor-pointer">

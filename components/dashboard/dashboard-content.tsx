@@ -101,14 +101,14 @@ export function DashboardContent({ firstName, trips = [] }: { firstName?: string
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.2, delay: idx * 0.05 }}
                 >
-                  <Link
-                    href={`/trips/${trip.id}`}
-                    className="group flex items-center justify-between rounded-2xl border border-border/50 p-5 bg-card hover:bg-muted/30 hover:border-[#FF7A59]/40 transition-all shadow-sm"
-                  >
-                    <div className="flex items-center gap-4">
-                      <div className="w-12 h-12 rounded-2xl bg-[#FF7A59]/10 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
-                        <MapPin className="w-5 h-5 text-[#FF7A59]" />
-                      </div>
+                <Link
+                  href={`/trips/${trip.id}`}
+                  className="group flex items-center justify-between rounded-2xl border border-white/10 p-5 bg-white/5 backdrop-blur-md hover:bg-white/10 hover:border-[#FFB36B]/40 transition-all shadow-sm"
+                >
+                  <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#FFB36B]/20 to-[#FF7A59]/20 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
+                      <MapPin className="w-5 h-5 text-[#FFB36B]" />
+                    </div>
                       <div>
                         <p className="text-base font-bold text-foreground group-hover:text-[#FF7A59] transition-colors">{trip.title}</p>
                         <p className="text-xs text-muted-foreground mt-0.5">{trip.primaryDestination?.name || "Planned trip"}</p>

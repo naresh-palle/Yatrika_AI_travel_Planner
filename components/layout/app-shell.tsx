@@ -29,18 +29,33 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
 
   return (
-    <div className="flex min-h-screen bg-background">
+    <div className="flex min-h-screen relative overflow-hidden bg-[#0B1F33]">
+      {/* Cinematic Sunrise Background (Authenticated) */}
+      <div className="fixed inset-0 -z-20">
+        <div 
+          className="absolute inset-0 opacity-40 grayscale-[0.3]"
+          style={{
+            backgroundImage: "url('/tirumala-memento.png')",
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            backgroundAttachment: 'fixed'
+          }}
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#FFB36B]/10 via-transparent to-[#0B1F33]/95" />
+        <div className="absolute inset-0 backdrop-blur-[2px]" />
+      </div>
+
       {/* Memento-style Narrow Sidebar */}
       <aside
         className={cn(
-          "fixed left-0 top-0 bottom-0 z-50 flex flex-col items-center bg-black/5 dark:bg-black/40 backdrop-blur-2xl border-r border-white/10 transition-all duration-300",
+          "fixed left-0 top-0 bottom-0 z-50 flex flex-col items-center bg-black/20 dark:bg-black/60 backdrop-blur-3xl border-r border-white/5 transition-all duration-300",
           "w-16 md:w-20"
         )}
       >
         {/* Logo */}
         <div className="py-8 mb-4">
-          <Link href="/" className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-white/20 transition-all group">
-            <span className="text-white font-bold text-sm group-hover:scale-110 transition-transform">Y</span>
+          <Link href="/" className="w-10 h-10 rounded-full bg-gradient-to-br from-[#FFB36B] to-[#FF7A59] flex items-center justify-center hover:scale-110 transition-all group">
+            <span className="text-white font-bold text-sm">Y</span>
           </Link>
         </div>
 
@@ -55,14 +70,14 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                 className={cn(
                   "p-2.5 rounded-xl transition-all duration-300 group relative",
                   isActive 
-                    ? "bg-[#FF7A59] text-white shadow-lg shadow-[#FF7A59]/40 scale-110" 
+                    ? "bg-gradient-to-br from-[#FFB36B] to-[#FF7A59] text-white shadow-lg shadow-[#FF7A59]/40 scale-110" 
                     : "text-white/40 hover:text-white hover:bg-white/5"
                 )}
               >
                 <item.icon className="w-5 h-5" />
                 
                 {/* Tooltip */}
-                <div className="absolute left-full ml-4 px-3 py-1.5 bg-black/80 text-white text-[10px] uppercase tracking-widest font-bold rounded-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none border border-white/10 shadow-xl whitespace-nowrap z-50">
+                <div className="absolute left-full ml-4 px-3 py-1.5 bg-black/90 text-white text-[10px] uppercase tracking-widest font-bold rounded-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none border border-white/10 shadow-xl whitespace-nowrap z-50">
                   {item.label}
                 </div>
               </Link>
@@ -85,7 +100,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             className="p-2.5 rounded-xl text-white/40 hover:text-white hover:bg-white/5 transition-all group relative"
           >
             <Settings className="w-5 h-5" />
-            <div className="absolute left-full ml-4 px-3 py-1.5 bg-black/80 text-white text-[10px] uppercase tracking-widest font-bold rounded-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none border border-white/10 shadow-xl whitespace-nowrap z-50">
+            <div className="absolute left-full ml-4 px-3 py-1.5 bg-black/90 text-white text-[10px] uppercase tracking-widest font-bold rounded-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none border border-white/10 shadow-xl whitespace-nowrap z-50">
               Settings
             </div>
           </Link>
