@@ -12,57 +12,47 @@ import { Sparkles, ChevronDown, Users, CalendarDays, MapPin } from 'lucide-react
 export function Hero() {
   const router = useRouter()
 
-  const [origin, setOrigin] = useState("")
-  const [destination, setDestination] = useState("")
-  const [startDate, setStartDate] = useState("")
-  const [endDate, setEndDate] = useState("")
-  const [travellers, setTravellers] = useState("1")
-
-  const handleSearch = () => {
-    const params = new URLSearchParams()
-    if (origin) params.append('origin', origin)
-    if (destination) params.append('destination', destination)
-    if (startDate) params.append('startDate', startDate)
-    if (endDate) params.append('endDate', endDate)
-    if (travellers) params.append('travellers', travellers)
-    router.push(`/ai-itinerary?${params.toString()}`)
-  }
-
   return (
-    <section className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden pt-24 pb-16">
-      {/* Tirupati AI-generated background photo */}
-      <div className="absolute inset-0 -z-10">
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 1.5 }}
-          className="absolute inset-0"
-          style={{
-            backgroundImage: "url('/tirupati-bg.png')",
-            backgroundSize: "cover",
-            backgroundPosition: "center 30%",
-            backgroundRepeat: "no-repeat",
-          }}
-        />
-        {/* Dark gradient overlay for readability */}
-        <div className="absolute inset-0 bg-gradient-to-b from-[#0B1F33]/75 via-[#0B1F33]/55 to-[#0B1F33]/80" />
-        {/* Subtle colour accent blobs on top of image */}
-        <div className="absolute top-0 right-0 w-[600px] h-[400px] bg-gradient-to-bl from-[#38BDF8]/15 to-transparent blur-[80px]" />
+    <section className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden">
+      
+      {/* Left Sidebar (Memento Style) */}
+      <div className="hidden lg:flex fixed left-0 top-0 bottom-0 w-16 flex-col items-center py-8 border-r border-white/10 z-40 bg-black/10 backdrop-blur-md">
+        <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center mb-12">
+          <span className="text-white font-bold text-xs">Y</span>
+        </div>
+        <div className="flex flex-col gap-8">
+          <div className="p-2 rounded-xl bg-[#FF7A59] text-white shadow-lg shadow-[#FF7A59]/30">
+            <MapPin className="w-5 h-5" />
+          </div>
+          <div className="p-2 text-white/40 hover:text-white transition-colors cursor-pointer">
+            <Sparkles className="w-5 h-5" />
+          </div>
+          <div className="p-2 text-white/40 hover:text-white transition-colors cursor-pointer">
+            <Users className="w-5 h-5" />
+          </div>
+          <div className="p-2 text-white/40 hover:text-white transition-colors cursor-pointer">
+            <CalendarDays className="w-5 h-5" />
+          </div>
+        </div>
+        <div className="mt-auto flex flex-col gap-6">
+          <div className="p-2 text-white/40 hover:text-white transition-colors cursor-pointer">
+            <ChevronDown className="w-5 h-5" />
+          </div>
+        </div>
       </div>
 
-      <div className="container mx-auto px-4 md:px-6 relative z-10 flex flex-col items-center">
-
-        {/* Badge */}
+      <div className="container mx-auto px-4 md:px-24 relative z-10 flex flex-col items-start pt-20">
+        
+        {/* Top Tagline */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.6 }}
-          className="mb-6"
+          className="mb-8"
         >
-          <Badge className="px-4 py-2 text-sm font-medium bg-white/10 text-white border border-white/20 hover:bg-white/15 backdrop-blur-sm">
-            <Sparkles className="w-4 h-4 mr-2 text-[#FFB36B]" />
-            AI-Powered Travel Planning
-          </Badge>
+          <span className="text-[10px] tracking-[0.3em] uppercase font-bold text-[#FFB36B]">
+            A Smart Travel Companion
+          </span>
         </motion.div>
 
         {/* Headline */}
@@ -70,16 +60,11 @@ export function Hero() {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.1 }}
-          className="text-center mb-4"
+          className="max-w-3xl mb-8"
         >
-          <h1
-            className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight text-white text-balance"
-            style={{ fontFamily: 'var(--font-heading)' }}
-          >
-            Your dream trip,{" "}
-            <span className="bg-gradient-to-r from-[#38BDF8] via-[#7DD3FC] to-[#FF7A59] bg-clip-text text-transparent">
-              planned by AI
-            </span>
+          <h1 className="text-5xl md:text-7xl lg:text-8xl font-medium text-white leading-[1.1] tracking-tight">
+            Plan trips you'll <br />
+            actually <span className="font-serif italic text-[#FFB36B]">remember.</span>
           </h1>
         </motion.div>
 
@@ -88,136 +73,53 @@ export function Hero() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
-          className="text-white/70 text-lg md:text-xl mb-12 text-center max-w-xl leading-relaxed"
+          className="text-white/80 text-lg md:text-xl mb-12 max-w-xl leading-relaxed font-light"
         >
-          Enter your destination and get a complete, personalized day-by-day itinerary in seconds.
+          Tell Yatrika where you're dreaming of going. We'll handcraft a day-by-day itinerary that feels like it was written by a friend who lives there.
         </motion.p>
 
-        {/* Planner Card */}
+        {/* Buttons */}
         <motion.div
-          initial={{ opacity: 0, scale: 0.96, y: 20 }}
-          animate={{ opacity: 1, scale: 1, y: 0 }}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.3 }}
-          className="w-full max-w-4xl"
+          className="flex flex-wrap items-center gap-4 mb-24"
         >
-          <div className="bg-white rounded-3xl shadow-2xl shadow-[#0F4C81]/20 overflow-hidden">
-            {/* Card header strip */}
-            <div className="bg-gradient-to-r from-[#0F4C81] to-[#1a6bb5] px-6 py-3 flex items-center gap-2">
-              <Sparkles className="w-4 h-4 text-[#38BDF8]" />
-              <span className="text-white/90 text-sm font-semibold tracking-wide">Yatrika AI Planner</span>
-            </div>
-
-            {/* Form fields */}
-            <div className="p-6 md:p-8">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-5">
-
-                {/* Origin */}
-                <div className="flex flex-col gap-1.5">
-                  <label className="flex items-center gap-1.5 text-xs font-bold text-gray-500 uppercase tracking-wider">
-                    <MapPin className="w-3.5 h-3.5" /> From
-                  </label>
-                  <div className="relative">
-                    <LocationAutocomplete
-                      value={origin}
-                      onChange={setOrigin}
-                      placeholder="Origin city (optional)"
-                      className="h-12 rounded-xl border-gray-200 text-[#0B1F33] bg-gray-50 focus:bg-white focus:border-[#38BDF8] transition-colors"
-                    />
-                  </div>
-                </div>
-
-                {/* Destination */}
-                <div className="flex flex-col gap-1.5">
-                  <label className="flex items-center gap-1.5 text-xs font-bold text-gray-500 uppercase tracking-wider">
-                    <MapPin className="w-3.5 h-3.5 text-[#FF7A59]" /> To
-                  </label>
-                  <LocationAutocomplete
-                    value={destination}
-                    onChange={setDestination}
-                    placeholder="Where do you want to go?"
-                    className="h-12 rounded-xl border-gray-200 text-[#0B1F33] bg-gray-50 focus:bg-white focus:border-[#38BDF8] transition-colors font-medium"
-                  />
-                </div>
-
-                {/* Departure */}
-                <div className="flex flex-col gap-1.5">
-                  <label className="flex items-center gap-1.5 text-xs font-bold text-gray-500 uppercase tracking-wider">
-                    <CalendarDays className="w-3.5 h-3.5" /> Departure
-                  </label>
-                  <input
-                    type="date"
-                    value={startDate}
-                    onChange={(e) => setStartDate(e.target.value)}
-                    min={new Date().toISOString().split('T')[0]}
-                    onClick={(e) => { if ((e.currentTarget as any).showPicker) (e.currentTarget as any).showPicker() }}
-                    className="h-12 w-full rounded-xl border border-gray-200 bg-gray-50 px-4 text-sm text-[#0B1F33] focus:outline-none focus:ring-2 focus:ring-[#38BDF8] focus:border-[#38BDF8] transition-colors"
-                  />
-                </div>
-
-                {/* Return */}
-                <div className="flex flex-col gap-1.5">
-                  <label className="flex items-center gap-1.5 text-xs font-bold text-gray-500 uppercase tracking-wider">
-                    <CalendarDays className="w-3.5 h-3.5" /> Return
-                  </label>
-                  <input
-                    type="date"
-                    value={endDate}
-                    onChange={(e) => setEndDate(e.target.value)}
-                    min={startDate || new Date().toISOString().split('T')[0]}
-                    onClick={(e) => { if ((e.currentTarget as any).showPicker) (e.currentTarget as any).showPicker() }}
-                    className="h-12 w-full rounded-xl border border-gray-200 bg-gray-50 px-4 text-sm text-[#0B1F33] focus:outline-none focus:ring-2 focus:ring-[#38BDF8] focus:border-[#38BDF8] transition-colors"
-                  />
-                </div>
-
-              </div>
-
-              {/* Travellers + CTA row */}
-              <div className="flex flex-col sm:flex-row items-stretch sm:items-end gap-4">
-                {/* Travellers */}
-                <div className="flex flex-col gap-1.5 flex-1">
-                  <label className="flex items-center gap-1.5 text-xs font-bold text-gray-500 uppercase tracking-wider">
-                    <Users className="w-3.5 h-3.5" /> Travellers
-                  </label>
-                  <div className="flex items-center h-12 rounded-xl border border-gray-200 bg-gray-50 px-4 gap-3">
-                    <button
-                      type="button"
-                      onClick={() => setTravellers(prev => Math.max(1, Number(prev) - 1).toString())}
-                      className="w-7 h-7 rounded-full bg-gray-200 hover:bg-[#38BDF8]/20 text-gray-600 flex items-center justify-center font-bold text-lg leading-none transition-colors"
-                    >−</button>
-                    <span className="flex-1 text-center font-bold text-[#0B1F33] text-base">{travellers}</span>
-                    <button
-                      type="button"
-                      onClick={() => setTravellers(prev => Math.min(20, Number(prev) + 1).toString())}
-                      className="w-7 h-7 rounded-full bg-gray-200 hover:bg-[#38BDF8]/20 text-gray-600 flex items-center justify-center font-bold text-lg leading-none transition-colors"
-                    >+</button>
-                  </div>
-                </div>
-
-                {/* CTA */}
-                <button
-                  onClick={handleSearch}
-                  className="flex-[2] h-12 bg-gradient-to-r from-[#FF7A59] to-[#FFB36B] hover:from-[#ff6b47] hover:to-[#ffa855] text-white font-bold text-base rounded-xl shadow-lg shadow-[#FF7A59]/30 transition-all hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-2"
-                >
-                  <Sparkles className="w-5 h-5" />
-                  Plan My Trip with AI
-                </button>
-              </div>
-            </div>
-          </div>
+          <Button
+            onClick={() => router.push("/ai-itinerary")}
+            className="h-14 px-8 rounded-full bg-[#FF7A59] hover:bg-[#ff6b47] text-white font-semibold text-base shadow-xl shadow-[#FF7A59]/30 transition-all border-0 flex items-center gap-2"
+          >
+            Plan my trip — free
+            <span className="text-xl">→</span>
+          </Button>
+          <Button
+            variant="outline"
+            className="h-14 px-8 rounded-full bg-white/10 backdrop-blur-md border-white/20 text-white hover:bg-white/20 text-base font-medium transition-all"
+            onClick={() => router.push("/#destinations")}
+          >
+            Browse destinations
+          </Button>
         </motion.div>
 
-        {/* Social proof strip */}
+        {/* Bottom Stats (Memento Style) */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 0.8, delay: 0.6 }}
-          className="mt-10 flex flex-wrap items-center justify-center gap-6 text-white/50 text-sm"
+          transition={{ duration: 1, delay: 0.5 }}
+          className="w-full flex flex-wrap items-center gap-16 text-white/60 border-t border-white/10 pt-10"
         >
-          <span className="flex items-center gap-1.5"><span className="text-[#FFB36B]">★★★★★</span> 4.9/5 rating</span>
-          <span className="w-px h-4 bg-white/20" />
-          <span>10,000+ trips planned</span>
-          <span className="w-px h-4 bg-white/20" />
-          <span>No account required</span>
+          <div>
+            <div className="text-2xl font-bold text-white mb-1">184k</div>
+            <div className="text-[10px] tracking-widest uppercase font-bold">Itineraries Crafted</div>
+          </div>
+          <div>
+            <div className="text-2xl font-bold text-white mb-1">78s</div>
+            <div className="text-[10px] tracking-widest uppercase font-bold">Avg. Time to Plan</div>
+          </div>
+          <div>
+            <div className="text-2xl font-bold text-white mb-1">4.9★</div>
+            <div className="text-[10px] tracking-widest uppercase font-bold">Travelers Love It</div>
+          </div>
         </motion.div>
 
       </div>

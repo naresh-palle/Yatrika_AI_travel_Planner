@@ -84,28 +84,23 @@ export function Navbar() {
             </div>
 
             {/* Desktop CTAs */}
-            <div className="hidden lg:flex items-center gap-3">
+            <div className="hidden lg:flex items-center gap-6">
               {!isSignedIn ? (
                 <>
                   <Button
                     variant="ghost"
                     size="sm"
-                    className={cn(
-                      "transition-colors",
-                      isScrolled
-                        ? "text-muted-foreground hover:text-foreground"
-                        : "text-white/80 hover:text-white hover:bg-white/10"
-                    )}
+                    className="text-white/80 hover:text-white hover:bg-transparent font-medium text-sm"
                     onClick={() => router.push("/sign-in")}
                   >
-                    Log in
+                    Sign in
                   </Button>
                   <Button
                     size="sm"
-                    className="btn-gradient text-white font-semibold shadow-lg shadow-[#FF7A59]/30 border-0"
-                    onClick={() => router.push("/ai-itinerary")}
+                    className="h-10 px-6 rounded-full bg-white text-[#0B1F33] hover:bg-white/90 font-bold shadow-lg transition-all"
+                    onClick={() => router.push("/sign-up")}
                   >
-                    Get Started Free
+                    Create account
                   </Button>
                 </>
               ) : (
@@ -113,22 +108,16 @@ export function Navbar() {
                   <Button
                     variant="ghost"
                     size="sm"
-                    className={cn(
-                      "transition-colors",
-                      isScrolled
-                        ? "text-muted-foreground hover:text-foreground"
-                        : "text-white/80 hover:text-white hover:bg-white/10"
-                    )}
+                    className="text-white/80 hover:text-white hover:bg-transparent font-medium text-sm"
                     onClick={() => signOut(() => router.push("/"))}
                   >
                     Log out
                   </Button>
                   <Button
                     size="sm"
-                    className="btn-gradient text-white font-semibold shadow-lg shadow-[#FF7A59]/30 border-0 flex items-center gap-2"
+                    className="h-10 px-6 rounded-full bg-white text-[#0B1F33] hover:bg-white/90 font-bold shadow-lg transition-all"
                     onClick={() => router.push("/dashboard")}
                   >
-                    <LayoutDashboard className="w-4 h-4" />
                     Dashboard
                   </Button>
                 </>

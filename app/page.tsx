@@ -11,23 +11,25 @@ import { Footer } from "@/components/landing/footer"
 export default function Home() {
   return (
     <main className="min-h-screen relative overflow-hidden bg-[#0B1F33]">
-      {/* Global Tirupati Background */}
+      {/* Global Cinematic Background */}
       <div className="fixed inset-0 -z-20">
         <div 
-          className="absolute inset-0 opacity-40"
+          className="absolute inset-0 opacity-70"
           style={{
-            backgroundImage: "url('/tirupati-bg.png')",
+            backgroundImage: "url('/tirumala-memento.png')",
             backgroundSize: 'cover',
-            backgroundPosition: 'center 30%',
+            backgroundPosition: 'center',
             backgroundAttachment: 'fixed'
           }}
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-[#0B1F33]/90 via-[#0B1F33]/80 to-[#0B1F33]" />
+        {/* Memento-style vignette/overlay */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-[#0B1F33]" />
+        <div className="absolute inset-0 bg-black/10" />
       </div>
 
-      {/* Animated Floating Gradient Blobs */}
-      <div className="floating-blob-1 opacity-20" aria-hidden="true" />
-      <div className="floating-blob-2 opacity-20" aria-hidden="true" />
+      {/* Floating Blobs (Subtle) */}
+      <div className="absolute top-[-10%] right-[-5%] w-[600px] h-[600px] bg-[#FF7A59]/10 rounded-full blur-[120px] pointer-events-none" />
+      <div className="absolute bottom-[-10%] left-[-5%] w-[600px] h-[600px] bg-[#38BDF8]/10 rounded-full blur-[120px] pointer-events-none" />
 
       {/* Content */}
       <div className="relative z-10">

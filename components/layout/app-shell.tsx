@@ -6,117 +6,108 @@ import { usePathname } from "next/navigation"
 import {
   LayoutDashboard,
   Luggage,
-  Map,
-  Menu,
-  PanelLeftClose,
-  PanelLeftOpen,
   Settings,
   Sparkles,
   Plane,
+  Home,
+  MessageSquare,
+  Compass,
+  User,
+  ChevronDown
 } from "lucide-react"
 import { motion } from "framer-motion"
-
-import { UserMenu } from "@/components/auth/user-menu"
-import { NotificationBell } from "@/components/notifications/notification-bell"
-import { Button } from "@/components/ui/button"
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
+import { UserButton } from "@clerk/nextjs"
 import { cn } from "@/lib/utils"
 
 const nav = [
-  { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
+  { href: "/dashboard", label: "Dashboard", icon: Home },
   { href: "/trips", label: "My Trips", icon: Luggage },
   { href: "/ai-itinerary", label: "Plan New Trip", icon: Sparkles },
-  { href: "/settings/billing", label: "Billing", icon: Settings },
 ] as const
 
-function SidebarNav({ collapsed = false }: { collapsed?: boolean }) {
-  const pathname = usePathname()
-  return (
-    <nav className="grid gap-1">
-      {nav.map((item) => (
-        <Link
-          key={item.href}
-          href={item.href}
-          className={cn(
-            "flex items-center rounded-md px-3 py-2 text-sm font-medium transition-colors hover:bg-secondary hover:text-foreground",
-            collapsed && "justify-center px-2",
-            pathname === item.href ? "bg-primary/10 text-primary" : "text-muted-foreground"
-          )}
-          title={collapsed ? item.label : undefined}
-        >
-          <item.icon className={cn("h-4 w-4", !collapsed && "mr-2")} />
-          {!collapsed ? item.label : null}
-        </Link>
-      ))}
-    </nav>
-  )
-}
-
 export function AppShell({ children }: { children: React.ReactNode }) {
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
+  const pathname = usePathname()
 
   return (
-    <div className="min-h-screen">
-      <header className="sticky top-0 z-40 border-b bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60 print:hidden">
-        <div className="mx-auto max-w-6xl px-4 sm:px-6">
-          <div className="flex h-14 items-center justify-between gap-3">
-            <div className="flex items-center gap-2">
-              <Sheet>
-                <SheetTrigger asChild>
-                  <Button variant="ghost" size="icon" className="md:hidden">
-                    <Menu className="h-5 w-5" />
-                    <span className="sr-only">Open navigation</span>
-                  </Button>
-                </SheetTrigger>
-                <SheetContent side="left" className="w-72">
-                  <div className="mb-4 text-sm font-semibold">App</div>
-                  <SidebarNav />
-                </SheetContent>
-              </Sheet>
-              <Link href="/" className="flex items-center gap-2 font-serif text-lg font-bold text-[#38BDF8] transition-colors hover:text-[#FF7A59]">
-                <Plane className="h-5 w-5" />
-                <span>Yatrika</span>
-              </Link>
-            </div>
-            <div className="flex items-center gap-1">
-              <NotificationBell />
-              <Button
-                variant="ghost"
-                size="icon"
-                className="hidden md:inline-flex"
-                onClick={() => setSidebarCollapsed((prev) => !prev)}
-                aria-label={sidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"}
-              >
-                {sidebarCollapsed ? (
-                  <PanelLeftOpen className="h-4 w-4" />
-                ) : (
-                  <PanelLeftClose className="h-4 w-4" />
+    <div className="flex min-h-screen bg-background">
+      {/* Memento-style Narrow Sidebar */}
+      <aside
+        className={cn(
+          "fixed left-0 top-0 bottom-0 z-50 flex flex-col items-center bg-black/5 dark:bg-black/40 backdrop-blur-2xl border-r border-white/10 transition-all duration-300",
+          "w-16 md:w-20"
+        )}
+      >
+        {/* Logo */}
+        <div className="py-8 mb-4">
+          <Link href="/" className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-white/20 transition-all group">
+            <span className="text-white font-bold text-sm group-hover:scale-110 transition-transform">Y</span>
+          </Link>
+        </div>
+
+        {/* Navigation Icons */}
+        <nav className="flex-1 flex flex-col items-center gap-8">
+          {nav.map((item) => {
+            const isActive = pathname === item.href
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={cn(
+                  "p-2.5 rounded-xl transition-all duration-300 group relative",
+                  isActive 
+                    ? "bg-[#FF7A59] text-white shadow-lg shadow-[#FF7A59]/40 scale-110" 
+                    : "text-white/40 hover:text-white hover:bg-white/5"
                 )}
-              </Button>
-              <UserMenu />
+              >
+                <item.icon className="w-5 h-5" />
+                
+                {/* Tooltip */}
+                <div className="absolute left-full ml-4 px-3 py-1.5 bg-black/80 text-white text-[10px] uppercase tracking-widest font-bold rounded-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none border border-white/10 shadow-xl whitespace-nowrap z-50">
+                  {item.label}
+                </div>
+              </Link>
+            )
+          })}
+          
+          {/* Extra Memento Icons */}
+          <div className="p-2.5 text-white/20 cursor-not-allowed">
+            <MessageSquare className="w-5 h-5" />
+          </div>
+          <div className="p-2.5 text-white/20 cursor-not-allowed">
+            <Compass className="w-5 h-5" />
+          </div>
+        </nav>
+
+        {/* Bottom Icons */}
+        <div className="py-8 flex flex-col gap-8 items-center">
+          <Link
+            href="/settings"
+            className="p-2.5 rounded-xl text-white/40 hover:text-white hover:bg-white/5 transition-all group relative"
+          >
+            <Settings className="w-5 h-5" />
+            <div className="absolute left-full ml-4 px-3 py-1.5 bg-black/80 text-white text-[10px] uppercase tracking-widest font-bold rounded-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none border border-white/10 shadow-xl whitespace-nowrap z-50">
+              Settings
             </div>
+          </Link>
+          <div className="relative group">
+            <UserButton 
+              afterSignOutUrl="/" 
+              appearance={{
+                elements: {
+                  userButtonAvatarBox: "w-8 h-8 border border-white/20"
+                }
+              }}
+            />
           </div>
         </div>
-      </header>
+      </aside>
 
-      <div className="mx-auto max-w-6xl px-4 sm:px-6">
-        <div className="flex gap-6 py-6">
-          <motion.aside
-            animate={{ width: sidebarCollapsed ? 72 : 220 }}
-            transition={{ duration: 0.2, ease: "easeInOut" }}
-            className="hidden md:block shrink-0 print:hidden"
-          >
-            <div className="rounded-lg border bg-card p-3">
-              <div className="mb-2 text-xs font-semibold text-muted-foreground">
-                {sidebarCollapsed ? "Nav" : "Navigation"}
-              </div>
-              <SidebarNav collapsed={sidebarCollapsed} />
-            </div>
-          </motion.aside>
-          <main className="min-w-0 flex-1">{children}</main>
-        </div>
+      {/* Main Content Area */}
+      <div className="flex-1 pl-16 md:pl-20 min-h-screen flex flex-col">
+        <main className="flex-1 relative">
+          {children}
+        </main>
       </div>
     </div>
   )
 }
-

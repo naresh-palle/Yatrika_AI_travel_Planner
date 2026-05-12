@@ -71,155 +71,81 @@ export function DashboardContent({ firstName, trips = [] }: { firstName?: string
   }
 
   return (
-    <div className="space-y-8">
-      {/* Welcome Hero Banner */}
-      <motion.section
-        initial={{ opacity: 0, y: 8 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.3 }}
-        className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-[#0F4C81] to-[#1a6bb5] p-6 sm:p-8 text-white"
-      >
-        {/* Background glow */}
-        <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute top-0 right-0 w-64 h-64 bg-[#38BDF8]/20 rounded-full blur-3xl" />
-          <div className="absolute bottom-0 left-0 w-48 h-48 bg-[#FF7A59]/10 rounded-full blur-2xl" />
-        </div>
-
-        <div className="relative z-10 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-          <div>
-            <p className="text-white/60 text-sm font-medium mb-1">Welcome back</p>
-            <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">
-              {firstName ? firstName : "Traveler"} ✈️
-            </h1>
-            <p className="text-white/70 text-sm mt-1.5">
-              Ready to plan your next adventure?
-            </p>
-          </div>
-          <Button
-            asChild
-            className="shrink-0 bg-white text-[#0F4C81] hover:bg-white/90 font-bold shadow-lg px-6"
-          >
-            <Link href="/ai-itinerary" className="flex items-center gap-2">
-              <Sparkles className="w-4 h-4" />
-              Plan New Trip
-            </Link>
-          </Button>
-        </div>
-      </motion.section>
-
-      {/* Stats Row */}
-      <section className="grid gap-4 sm:grid-cols-2">
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.25, delay: 0.05 }}
-        >
-          <Card className="h-full hover:shadow-md transition-shadow">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-muted-foreground">Total Trips</CardTitle>
-              <PlaneTakeoff className="h-4 w-4 text-[#38BDF8]" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold">{trips.length}</div>
-              <p className="text-xs text-muted-foreground mt-1">Planned over all time</p>
-            </CardContent>
-          </Card>
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.25, delay: 0.1 }}
-        >
-          <Card className="h-full hover:shadow-md transition-shadow">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-muted-foreground">Planned Budget</CardTitle>
-              <DollarSign className="h-4 w-4 text-emerald-500" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold">${totalBudget.toLocaleString()}</div>
-              <button
-                onClick={() => setBudgetOpen(true)}
-                className="text-xs text-[#38BDF8] hover:underline font-medium mt-1 focus:outline-none"
-              >
-                Manage Budgets →
-              </button>
-            </CardContent>
-          </Card>
-        </motion.div>
-      </section>
-
-      {/* Trips List */}
+    <div className="max-w-4xl mx-auto py-12 px-4">
+      {/* Trips List - Minimalist */}
       <motion.section
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.25, delay: 0.15 }}
+        transition={{ duration: 0.3 }}
       >
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-4">
-            <div>
-              <CardTitle>Your Trips</CardTitle>
-              <CardDescription>All your planned and active itineraries.</CardDescription>
-            </div>
-            <Button size="sm" variant="outline" asChild>
-              <Link href="/ai-itinerary" className="flex items-center gap-1.5">
-                <Sparkles className="w-3.5 h-3.5" />
-                New
-              </Link>
-            </Button>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            {trips.length > 0 ? (
-              trips.map((trip, idx) => (
-                <motion.div
-                  key={trip.id}
-                  initial={{ opacity: 0, x: -10 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.2, delay: idx * 0.04 }}
+        <div className="flex items-center justify-between mb-8">
+          <div>
+            <h1 className="text-3xl font-bold tracking-tight text-foreground font-serif">Your Trips</h1>
+            <p className="text-muted-foreground text-sm mt-1">Manage and view your planned itineraries.</p>
+          </div>
+          <Button size="sm" className="bg-[#FF7A59] hover:bg-[#ff6b47] rounded-full px-6" asChild>
+            <Link href="/ai-itinerary" className="flex items-center gap-1.5">
+              <Sparkles className="w-3.5 h-3.5" />
+              New Trip
+            </Link>
+          </Button>
+        </div>
+
+        <div className="grid gap-4">
+          {trips.length > 0 ? (
+            trips.map((trip, idx) => (
+              <motion.div
+                key={trip.id}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.2, delay: idx * 0.05 }}
+              >
+                <Link
+                  href={`/trips/${trip.id}`}
+                  className="group flex items-center justify-between rounded-2xl border border-border/50 p-5 bg-card hover:bg-muted/30 hover:border-[#FF7A59]/40 transition-all shadow-sm"
                 >
-                  <Link
-                    href={`/trips/${trip.id}`}
-                    className="group flex items-center justify-between rounded-xl border border-border/50 p-4 hover:bg-muted/40 hover:border-[#38BDF8]/40 transition-all"
-                  >
-                    <div className="flex items-start gap-3">
-                      <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-[#38BDF8]/20 to-[#0F4C81]/10 flex items-center justify-center shrink-0">
-                        <MapPin className="w-4 h-4 text-[#38BDF8]" />
-                      </div>
-                      <div>
-                        <p className="text-sm font-semibold text-foreground group-hover:text-[#38BDF8] transition-colors">{trip.title}</p>
-                        <p className="text-xs text-muted-foreground mt-0.5">{trip.primaryDestination?.name || "Planned trip"}</p>
-                      </div>
+                  <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 rounded-2xl bg-[#FF7A59]/10 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
+                      <MapPin className="w-5 h-5 text-[#FF7A59]" />
                     </div>
-                    <div className="flex items-center gap-3 shrink-0">
-                      <div className="hidden sm:flex items-center text-xs text-muted-foreground gap-1">
-                        <Clock3 className="h-3.5 w-3.5" />
-                        {new Date(trip.updatedAt).toLocaleDateString()}
-                      </div>
-                      <Badge variant="outline" className="text-[10px] font-medium">
-                        {trip.status || "Planned"}
-                      </Badge>
+                    <div>
+                      <p className="text-base font-bold text-foreground group-hover:text-[#FF7A59] transition-colors">{trip.title}</p>
+                      <p className="text-xs text-muted-foreground mt-0.5">{trip.primaryDestination?.name || "Planned trip"}</p>
                     </div>
-                  </Link>
-                </motion.div>
-              ))
-            ) : (
-              <div className="flex flex-col items-center justify-center py-12 text-center">
-                <div className="w-14 h-14 rounded-full bg-[#38BDF8]/10 flex items-center justify-center mb-4">
-                  <PlaneTakeoff className="w-6 h-6 text-[#38BDF8]" />
-                </div>
-                <p className="font-medium text-foreground mb-1">No trips yet</p>
-                <p className="text-sm text-muted-foreground mb-4">Start planning your first AI-generated adventure</p>
-                <Button asChild size="sm" className="bg-gradient-to-r from-[#FF7A59] to-[#FFB36B] text-white border-0">
-                  <Link href="/ai-itinerary" className="flex items-center gap-2">
-                    <Sparkles className="w-4 h-4" />
-                    Plan My First Trip
-                  </Link>
-                </Button>
+                  </div>
+                  <div className="flex items-center gap-4">
+                    <div className="hidden sm:flex flex-col items-end">
+                      <span className="text-xs font-bold text-foreground uppercase tracking-wider">{new Date(trip.updatedAt).toLocaleDateString()}</span>
+                      <span className="text-[10px] text-muted-foreground uppercase tracking-widest mt-0.5">Updated</span>
+                    </div>
+                    <Badge variant="outline" className="rounded-full px-3 py-1 text-[10px] uppercase tracking-widest font-bold">
+                      {trip.status || "Planned"}
+                    </Badge>
+                  </div>
+                </Link>
+              </motion.div>
+            ))
+          ) : (
+            <div className="flex flex-col items-center justify-center py-20 text-center bg-card rounded-3xl border border-dashed">
+              <div className="w-16 h-16 rounded-full bg-[#FF7A59]/10 flex items-center justify-center mb-6">
+                <Sparkles className="w-8 h-8 text-[#FF7A59]" />
               </div>
-            )}
-          </CardContent>
-        </Card>
+              <h3 className="text-xl font-bold text-foreground mb-2">No itineraries yet</h3>
+              <p className="text-sm text-muted-foreground mb-8 max-w-xs">
+                Start your journey by creating your first AI-powered travel plan.
+              </p>
+              <Button asChild className="bg-[#FF7A59] hover:bg-[#ff6b47] rounded-full px-8 h-12">
+                <Link href="/ai-itinerary" className="flex items-center gap-2">
+                  <Sparkles className="w-4 h-4" />
+                  Plan My First Trip
+                </Link>
+              </Button>
+            </div>
+          )}
+        </div>
       </motion.section>
+    </div>
+  )
 
       {/* Budget Dialog */}
       <Dialog open={budgetOpen} onOpenChange={setBudgetOpen}>

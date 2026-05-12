@@ -15,6 +15,11 @@ import { OfflineBanner } from "@/components/offline/offline-banner"
 import { PwaRegister } from "@/components/offline/pwa-register"
 import { Toaster } from "@/components/ui/sonner"
 
+const playfair = Playfair_Display({
+  subsets: ['latin'],
+  variable: '--font-serif',
+  display: 'swap',
+})
 
 const inter = Inter({ 
   subsets: ['latin'],
@@ -91,7 +96,7 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${inter.variable} ${poppins.variable} ${geistMono.variable} bg-background`}
+      className={`${inter.variable} ${poppins.variable} ${playfair.variable} ${geistMono.variable} bg-background`}
     >
       <body className="font-sans antialiased">
         <ClerkProvider>
